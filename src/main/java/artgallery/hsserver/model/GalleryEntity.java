@@ -2,7 +2,6 @@ package artgallery.hsserver.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -36,7 +35,7 @@ public class GalleryEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
-  private UUID id;
+  private long id;
 
   @NotNull(message = "date must be not null")
   @Column(name = "date")

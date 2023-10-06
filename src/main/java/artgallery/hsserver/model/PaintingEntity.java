@@ -1,7 +1,6 @@
 package artgallery.hsserver.model;
 
 import java.util.List;
-import java.util.UUID;
 
 import artgallery.hsserver.enums.Style;
 import jakarta.persistence.CascadeType;
@@ -39,7 +38,7 @@ public class PaintingEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
-  private UUID id;
+  private long id;
 
   @Column(name = "year_of_creation")
   Integer yearOfCreation;

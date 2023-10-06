@@ -1,7 +1,6 @@
 package artgallery.hsserver.model;
 
 import lombok.*;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +23,7 @@ public class RoleEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private UUID id;
+  private long id;
 
   @Column(name = "name")
   @NotBlank(message = "must be not null")

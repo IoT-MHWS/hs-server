@@ -2,7 +2,6 @@ package artgallery.hsserver.model;
 
 import lombok.*;
 import java.util.Date;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +27,7 @@ public class ExhibitionEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
-  private UUID id;
+  private long id;
 
   @Column(name = "name")
   String name;

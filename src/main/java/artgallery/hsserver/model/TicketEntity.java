@@ -1,7 +1,5 @@
 package artgallery.hsserver.model;
 
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +29,7 @@ public class TicketEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
-  private UUID id;
+  private long id;
 
   @Column(name = "description")
   String description;

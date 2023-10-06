@@ -1,0 +1,200 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: zubrailx
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: artist
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: year_of_birth
+                  type: INT
+              - column:
+                  name: bio
+                  type: VARCHAR(255)
+        - createTable:
+            tableName: exhibition
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: start_date
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: end_date
+                  type: DATETIME
+              - column:
+                  name: gallery_id
+                  type: BIGINT
+        - createTable:
+            tableName: gallery
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: date
+                  type: DATETIME
+        - createTable:
+            tableName: gallery_painting
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: gallery_id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: painting_id
+                  type: BIGINT
+        - createTable:
+            tableName: order
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: date
+                  type: DATETIME
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+        - createTable:
+            tableName: painting
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: year_of_creation
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: style
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: artist_id
+                  type: BIGINT
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: name
+                  type: VARCHAR(32)
+        - createTable:
+            tableName: ticket
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: INT
+              - column:
+                  name: order_id
+                  type: BIGINT
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: login
+                  type: VARCHAR(32)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: role_id
+                  type: BIGINT
+        - addUniqueConstraint:
+            columnNames: login
+            constraintName: uc_user_login
+            tableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: gallery_id
+            baseTableName: exhibition
+            constraintName: FK_EXHIBITION_ON_GALLERY
+            referencedColumnNames: id
+            referencedTableName: gallery
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: order
+            constraintName: FK_ORDER_ON_USER
+            referencedColumnNames: id
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: artist_id
+            baseTableName: painting
+            constraintName: FK_PAINTING_ON_ARTIST
+            referencedColumnNames: id
+            referencedTableName: artist
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: ticket
+            constraintName: FK_TICKET_ON_ORDER
+            referencedColumnNames: id
+            referencedTableName: order
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: user
+            constraintName: FK_USER_ON_ROLE
+            referencedColumnNames: id
+            referencedTableName: role
