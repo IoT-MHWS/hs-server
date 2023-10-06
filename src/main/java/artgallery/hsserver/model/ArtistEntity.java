@@ -2,8 +2,14 @@ package artgallery.hsserver.model;
 
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Getter
 @Setter
@@ -11,8 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 @Data
+@Entity
 @Table(name = "artist")
 public class ArtistEntity {
 

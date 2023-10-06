@@ -1,15 +1,25 @@
 package artgallery.hsserver.model;
 
-import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.validation.constraints.NotBlank;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -21,21 +31,21 @@ import java.util.UUID;
 @Table(name = "order")
 public class OrderEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private UUID id;
 
-    @NotNull(message = "date must be not null")
-    @Column(name = "date")
-    private Date date;
+  @NotNull(message = "date must be not null")
+  @Column(name = "date")
+  private Date date;
 
-    @NotNull(message = "not null")
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+  @NotNull(message = "not null")
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "orderEntity")
-    @ToString.Exclude
-    private List<TicketEntity> ticketEntities;
+  @OneToMany(mappedBy = "orderEntity")
+  @ToString.Exclude
+  private List<TicketEntity> ticketEntities;
 }
