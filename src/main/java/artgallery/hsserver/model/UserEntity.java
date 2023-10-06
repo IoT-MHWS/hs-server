@@ -1,7 +1,6 @@
 package artgallery.hsserver.model;
 
 import lombok.*;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +26,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private long id;
 
     @Column(name = "login", nullable = false, unique = true, length = 32)
     @NotBlank(message = "must be not null")

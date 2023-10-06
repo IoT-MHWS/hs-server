@@ -2,7 +2,6 @@ package artgallery.hsserver.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +33,7 @@ public class OrderEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
-  private UUID id;
+  private long id;
 
   @NotNull(message = "date must be not null")
   @Column(name = "date")
