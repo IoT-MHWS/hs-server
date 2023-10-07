@@ -1,4 +1,4 @@
-package artgallery.hsserver.enums;
+package artgallery.hsserver.model;
 
 public enum Style {
     REALISM,
