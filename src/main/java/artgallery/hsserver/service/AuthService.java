@@ -17,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * AuthService
  */
@@ -37,6 +39,7 @@ public class AuthService {
     var userEntity = UserEntity.builder()
       .login(req.getLogin())
       .password(passwordEncoder.encode(req.getPassword()))
+      .roles(new ArrayList<>())
       .build();
 
     var roleEntity = roleRepository.findByName(Role.PUBLIC.name())
