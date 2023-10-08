@@ -1,27 +1,37 @@
 package artgallery.hsserver.configuration;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 /**
  * OpenAPIConfiguration
  */
 @Configuration
-public class OpenAPIConfiguration {
-
-  @Bean
-  public OpenAPI springShopOpenAPI() {
-    return new OpenAPI()
-        .info(new Info().title("HS server")
-            .description("Highload System server")
-            .version("v0.0.1"))
-        .components(new Components()
-            .addSecuritySchemes("bearer-key",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
+@OpenAPIDefinition(
+  info = @Info(
+    title = "HS server",
+    description = "Highload System server",
+    version = "0.0.1"
+    ),
+  security ={
+    @SecurityRequirement(
+      name = "bearerAuth"
+    )
   }
-
+)
+@SecurityScheme(
+  name = "bearerAuth",
+  description = "JWT auth description",
+  scheme = "bearer",
+  type = SecuritySchemeType.HTTP,
+  bearerFormat = "JWT",
+  in = SecuritySchemeIn.HEADER
+)
+public class OpenAPIConfiguration {
 }
