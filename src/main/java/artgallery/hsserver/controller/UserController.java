@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
  * UserController
  */
 @RestController
-@RequestMapping(path = "/api/v1/user", produces = {"application/json", "application/xml"})
+@RequestMapping(path = "/api/v1/users", produces = {"application/json", "application/xml"})
 @RequiredArgsConstructor
 public class UserController {
 
   private final UserService userService;
 
-  @PostMapping(path = "/{login}/role/add")
+  @PostMapping(path = "/{login}/roles/add")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> add(@PathVariable("login") String name, RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
@@ -45,7 +45,7 @@ public class UserController {
 
   }
 
-  @PostMapping(path = "/{login}/role/remove")
+  @PostMapping(path = "/{login}/roles/remove")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> remove(@PathVariable("login") String name, RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
@@ -69,7 +69,7 @@ public class UserController {
     }
   }
 
-  @GetMapping(path = "/{login}/role")
+  @GetMapping(path = "/{login}/roles")
   public ResponseEntity<?> remove(@PathVariable("login") String name) {
     var validator = new UserValidator().validateLogin(name);
 
