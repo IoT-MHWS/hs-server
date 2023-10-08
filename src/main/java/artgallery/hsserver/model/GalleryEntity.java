@@ -33,7 +33,7 @@ import lombok.ToString;
 public class GalleryEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 

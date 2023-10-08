@@ -35,7 +35,7 @@ import lombok.ToString;
 public class PaintingEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 
@@ -47,7 +47,7 @@ public class PaintingEntity {
   @Column(name = "style")
   private Style style;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne()
   @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false)
   private ArtistEntity artistEntity;
 

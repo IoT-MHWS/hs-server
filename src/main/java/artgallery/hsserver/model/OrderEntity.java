@@ -27,11 +27,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "order")
+@Table(name = "`order`")
 public class OrderEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 

@@ -25,4 +25,8 @@ public class Validator {
   public List<Violation> getViolations() {
     return violations;
   }
+
+  public String getDescription() {
+    return violations.toString();
+  }
 }
