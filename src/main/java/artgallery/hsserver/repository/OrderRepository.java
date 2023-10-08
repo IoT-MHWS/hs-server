@@ -1,13 +1,12 @@
 package artgallery.hsserver.repository;
 
-import java.util.Optional;
-
+import artgallery.hsserver.model.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import artgallery.hsserver.model.OrderEntity;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
-    Optional<OrderEntity> findById(Long uuid);
+  Optional<OrderEntity> findById(Long uuid);
 }

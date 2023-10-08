@@ -1,14 +1,13 @@
 package artgallery.hsserver.configuration;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import artgallery.hsserver.model.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import artgallery.hsserver.model.UserEntity;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
   private final String username;
@@ -19,8 +18,8 @@ public class CustomUserDetails implements UserDetails {
     username = userEntity.getLogin();
     password = userEntity.getPassword();
     grantedAuthorities = userEntity.getRoles().stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-        .collect(Collectors.toList());
+      .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+      .collect(Collectors.toList());
   }
 
   @Override

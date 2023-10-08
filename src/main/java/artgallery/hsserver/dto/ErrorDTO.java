@@ -1,8 +1,7 @@
 package artgallery.hsserver.dto;
 
-import org.springframework.http.HttpStatusCode;
-
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 
 /**
  * ErrorDTO

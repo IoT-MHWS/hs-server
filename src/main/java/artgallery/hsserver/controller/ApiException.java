@@ -1,8 +1,7 @@
 package artgallery.hsserver.controller;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 /**
  * ApiException
@@ -21,7 +20,7 @@ public class ApiException extends Throwable {
 
   ApiException(HttpStatus status, String message, Throwable ex) {
     apiError = new ApiError(status, message, ex);
-   }
+  }
 
   public ApiError get() {
     return apiError;

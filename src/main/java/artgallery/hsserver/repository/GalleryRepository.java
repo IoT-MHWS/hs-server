@@ -1,10 +1,9 @@
 package artgallery.hsserver.repository;
 
+import artgallery.hsserver.model.GalleryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import artgallery.hsserver.model.GalleryEntity;
-
 @Repository
-public interface GalleryRepository extends JpaRepository<GalleryEntity, Long>{
+public interface GalleryRepository extends JpaRepository<GalleryEntity, Long> {
 }

@@ -1,15 +1,5 @@
 package artgallery.hsserver.service;
 
-import java.io.IOException;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import artgallery.hsserver.configuration.CustomUserDetails;
 import artgallery.hsserver.configuration.JwtService;
 import artgallery.hsserver.dto.TokenDTO;
@@ -17,13 +7,15 @@ import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.model.Role;
-import artgallery.hsserver.model.RoleEntity;
 import artgallery.hsserver.model.UserEntity;
 import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 /**
  * AuthService
@@ -43,12 +35,12 @@ public class AuthService {
 
   public void register(UserDTO req) throws RoleDoesNotExistException {
     var userEntity = UserEntity.builder()
-        .login(req.getLogin())
-        .password(passwordEncoder.encode(req.getPassword()))
-        .build();
+      .login(req.getLogin())
+      .password(passwordEncoder.encode(req.getPassword()))
+      .build();
 
     var roleEntity = roleRepository.findByName(Role.PUBLIC.name())
-        .orElseThrow(() -> new RoleDoesNotExistException(Role.PUBLIC));
+      .orElseThrow(() -> new RoleDoesNotExistException(Role.PUBLIC));
 
     userEntity.getRoles().add(roleEntity);
 
@@ -57,10 +49,10 @@ public class AuthService {
 
   public TokenDTO login(UserDTO req) throws UserDoesNotExistException {
     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-        req.getLogin(), req.getPassword()));
+      req.getLogin(), req.getPassword()));
 
     var userEntity = userRepository.findByLogin(req.getLogin())
-        .orElseThrow(() -> new UserDoesNotExistException(req.getLogin()));
+      .orElseThrow(() -> new UserDoesNotExistException(req.getLogin()));
 
     var customUserDetails = new CustomUserDetails(userEntity);
 
@@ -84,7 +76,7 @@ public class AuthService {
 
     if (login != null) {
       UserEntity userEntity = userRepository.findByLogin(login)
-          .orElseThrow(() -> new UserDoesNotExistException(login));
+        .orElseThrow(() -> new UserDoesNotExistException(login));
       var userDetails = new CustomUserDetails(userEntity);
 
       if (jwtService.isTokenValid(refreshToken, userDetails)) {

@@ -1,27 +1,17 @@
 package artgallery.hsserver.controller;
 
-import java.io.IOException;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.UserDTO;
-import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1/auth", produces = { "application/json", "application/xml" })
+@RequestMapping(path = "/api/v1/auth", produces = {"application/json", "application/xml"})
 @RequiredArgsConstructor
 class AuthController {
 
@@ -35,7 +25,7 @@ class AuthController {
     try {
       if (validator.hasViolations()) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-            new Exception(validator.getDescription()));
+          new Exception(validator.getDescription()));
       }
 
       try {
@@ -59,7 +49,7 @@ class AuthController {
     try {
       if (validator.hasViolations()) {
         throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-            new Exception(validator.getDescription()));
+          new Exception(validator.getDescription()));
       }
 
       try {
