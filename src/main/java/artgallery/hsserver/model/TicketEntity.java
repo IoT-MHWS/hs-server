@@ -27,7 +27,7 @@ import lombok.ToString;
 public class TicketEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 
@@ -37,7 +37,7 @@ public class TicketEntity {
   @Column(name = "price")
   Integer price;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne()
   @JoinColumn(name = "order_id")
   @ToString.Exclude
   private OrderEntity orderEntity;

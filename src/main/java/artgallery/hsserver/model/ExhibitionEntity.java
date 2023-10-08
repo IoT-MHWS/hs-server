@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 public class ExhibitionEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private long id;
 
@@ -40,7 +40,7 @@ public class ExhibitionEntity {
   @Column(name = "end_date")
   private Date endDate;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne()
   @JoinColumn(name = "gallery_id", referencedColumnName = "id")
   private GalleryEntity gallery;
 }

@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: zubrailx
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropForeignKeyConstraint:
+            constraintName: FK_USER_ON_ROLE
+            baseTableName: user
+        - dropColumn:
+            columnName: role_id
+            tableName: user
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: role_id
+                  type: BIGINT
+        - addPrimaryKey:
+            tableName: "user_role"
+            columnNames: "user_id,role_id"
+            constraintName: "PK_USER_ROLE_ON_USER_ID_ROLE_ID"
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_role
+            constraintName: FK_USER_ROLE_ON_USER
+            referencedColumnNames: id
+            referencedTableName: user
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: user_role
+            constraintName: FK_USER_ROLE_ON_ROLE
+            referencedColumnNames: id
+            referencedTableName: role

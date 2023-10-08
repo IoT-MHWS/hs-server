@@ -1,13 +1,15 @@
 package artgallery.hsserver.repository;
 
-import artgallery.hsserver.model.UserEntity;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Optional;
-import java.util.UUID;
+
+import artgallery.hsserver.model.UserEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID>{
-    Optional<UserEntity> findUserByUserId(UUID id);
-    Optional<UserEntity> findByUsername(String username);
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+  Optional<UserEntity> findUserById(Long id);
+
+  Optional<UserEntity> findByLogin(String username);
 }
