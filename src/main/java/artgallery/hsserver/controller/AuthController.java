@@ -19,7 +19,7 @@ class AuthController {
 
   @PostMapping(path = "/register")
   public ResponseEntity<?> register(@RequestBody UserDTO req) {
-    UserValidator validator = new UserValidator();
+    AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
     try {
@@ -43,7 +43,7 @@ class AuthController {
 
   @PostMapping(path = "/login")
   public ResponseEntity<?> login(@RequestBody UserDTO req) {
-    UserValidator validator = new UserValidator();
+    AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
     try {
@@ -79,15 +79,15 @@ class AuthController {
     }
   }
 
-  private class UserValidator extends Validator {
-    public UserValidator validateLogin(UserDTO req) {
+  private class AuthValidator extends Validator {
+    public AuthValidator validateLogin(UserDTO req) {
       if (req.getLogin() == null || req.getLogin().isEmpty()) {
         this.addViolation("login", "user login in not set or empty");
       }
       return this;
     }
 
-    public UserValidator validatePassword(UserDTO req) {
+    public AuthValidator validatePassword(UserDTO req) {
       if (req.getPassword() == null || req.getPassword().isEmpty()) {
         this.addViolation("password", "user password in not set or empty");
       }
