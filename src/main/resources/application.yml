@@ -18,9 +18,16 @@ springdoc:
   api-docs:
     path: "/api-docs"
   swagger-ui:
-    disable-swagger-default-url: true
+    # disable-swagger-default-url: true
     path: "/swagger-ui"
-    operationsSorter : method
+    # operationsSorter : method
+
+hs-server:
+  security:
+    jwt:
+      secret-key: ${HS_SERVER_JWT_SECRET_KEY}
+      expiration: ${HS_SERVER_JWT_EXPIRATION}
+      refresh-expiration: ${HS_SERVER_JWT_REFRESH_EXPIRATION}
 
 server:
   port: ${HS_SERVER_PORT}
