@@ -12,8 +12,8 @@ import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.UserDTO;
 
 @RestController
-@RequestMapping("/api/v1/user")
-class UserController {
+@RequestMapping("/api/v1/auth")
+class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody UserDTO req) {
