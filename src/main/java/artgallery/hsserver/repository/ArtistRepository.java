@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.ArtistEntity;
 
 @Repository
-public interface ArtistRepository extends JpaRepository<ArtistRepository, UUID> {
-    List<ArtistEntity> findByName(String name);
+public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
 }
 
 

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.RoleEntity;
 
 @Repository
-public interface RoleRepository extends JpaRepository<RoleEntity, UUID> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     Optional<RoleEntity> findByName(String name);
 }

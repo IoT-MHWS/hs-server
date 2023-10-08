@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.ExhibitionEntity;
 
 @Repository
-public interface ExhibitionRepository extends JpaRepository<ExhibitionEntity, UUID>{
+public interface ExhibitionRepository extends JpaRepository<ExhibitionEntity, Long>{
     Optional<ExhibitionEntity> findByName(String name);
 }

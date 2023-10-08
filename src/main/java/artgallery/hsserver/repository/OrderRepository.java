@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.OrderEntity;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
-    Optional<OrderEntity> findById(UUID uuid);
+public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
+    Optional<OrderEntity> findById(Long uuid);
 }

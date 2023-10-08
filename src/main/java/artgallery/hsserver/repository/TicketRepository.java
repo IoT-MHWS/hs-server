@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.TicketEntity;
 
 @Repository
-public interface TicketRepository extends JpaRepository<TicketEntity, UUID> {
-    Optional<TicketEntity> findById(UUID uuid);
+public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
+    Optional<TicketEntity> findById(Long uuid);
 }

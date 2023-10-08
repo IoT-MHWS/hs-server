@@ -2,11 +2,15 @@ package artgallery.hsserver.model;
 
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,6 +28,9 @@ public class RoleEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
+
+  @ManyToMany(mappedBy = "roles")
+  private Set<UserEntity> users = new HashSet<>();
 
   @Column(name = "name")
   @NotBlank(message = "must be not null")

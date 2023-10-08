@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import artgallery.hsserver.model.PaintingEntity;
 
 @Repository
-public interface PaintingRepository extends JpaRepository<PaintingEntity, UUID> {
-//    Optional<PaintingEntity> findByName(String name);
+public interface PaintingRepository extends JpaRepository<PaintingEntity, Long> {
 }
 
