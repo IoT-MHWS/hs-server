@@ -11,34 +11,44 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/v1/auth", produces = {"application/json", "application/xml"})
+@RequestMapping(path = "/api/v1/auth", produces = { "application/json", "application/xml" })
 @RequiredArgsConstructor
 class AuthController {
 
   private final AuthService authService;
+
+  public interface RunController {
+    public ResponseEntity<?> run() throws Exception;
+  }
+
+  public ResponseEntity<?> controller(Validator validator, RunController controllerFunc, String serviceErrMsg) {
+    try {
+      if (validator.hasViolations()) {
+        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
+            new Exception(validator.getDescription()));
+      }
+
+      try {
+        return controllerFunc.run();
+      } catch (Exception ex) {
+        throw new ApiException(HttpStatus.CONFLICT, "register can't be done", ex);
+      }
+
+    } catch (ApiException e) {
+      return ResponseEntity.status(e.get().getStatus()).body(e.get());
+    }
+  }
 
   @PostMapping(path = "/register")
   public ResponseEntity<?> register(@RequestBody UserDTO req) {
     AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-          new Exception(validator.getDescription()));
-      }
-
-      try {
-        authService.register(req);
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "register can't be done", ex);
-      }
-
-      return ResponseEntity.ok().body(new MessageDTO("ok"));
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
+    return controller(validator, () -> {
+      authService.register(req);
+      return ResponseEntity.ok().body("ok");
+    },
+        "register can't be done");
   }
 
   @PostMapping(path = "/login")
@@ -46,37 +56,21 @@ class AuthController {
     AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-          new Exception(validator.getDescription()));
-      }
+    return controller(validator, () -> {
+      var tokenDTO = authService.login(req);
+      return ResponseEntity.ok().body(tokenDTO);
+    },
+        "login can't be done");
 
-      try {
-        var tokenDTO = authService.login(req);
-        return ResponseEntity.ok().body(tokenDTO);
-
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "login can't be done", ex);
-      }
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
   }
 
   @PostMapping("/refresh")
   public ResponseEntity<?> refreshToken(@RequestHeader HttpHeaders reqHeaders) {
-    try {
-      try {
-        var tokenDTO = authService.refreshToken(reqHeaders);
-        return ResponseEntity.ok().body(tokenDTO);
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "refresh can't be done", ex);
-      }
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
+    return controller(new Validator(), () -> {
+      var tokenDTO = authService.refreshToken(reqHeaders);
+      return ResponseEntity.ok().body(tokenDTO);
+    },
+        "refresh can't be done");
   }
 
   private class AuthValidator extends Validator {

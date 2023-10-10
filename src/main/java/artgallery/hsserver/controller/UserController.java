@@ -90,7 +90,7 @@ public class UserController {
     }
   }
 
-  private class UserValidator extends Validator {
+  private static class UserValidator extends Validator {
     public UserValidator validateLogin(String login) {
       if (login == null || login.isEmpty()) {
         this.addViolation("login", "user login in not set or empty");
