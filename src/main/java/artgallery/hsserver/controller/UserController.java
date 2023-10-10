@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * UserController
  */
 @RestController
-@RequestMapping(path = "/api/v1/users", produces = {"application/json", "application/xml"})
+@RequestMapping(path = "/api/v1/users", produces = { "application/json", "application/xml" })
 @RequiredArgsConstructor
 public class UserController {
 
@@ -25,24 +25,10 @@ public class UserController {
   public ResponseEntity<?> add(@PathVariable("login") String name, RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-          new Exception(validator.getDescription()));
-      }
-
-      try {
-        userService.addRole(name, roleDTO.getRole());
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "add failed", ex);
-      }
-
+    return ControllerExecutor.execute(validator, () -> {
+      userService.addRole(name, roleDTO.getRole());
       return ResponseEntity.ok().body(new MessageDTO("ok"));
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
-
+    }, "add failed");
   }
 
   @PostMapping(path = "/{login}/roles/remove")
@@ -50,44 +36,19 @@ public class UserController {
   public ResponseEntity<?> remove(@PathVariable("login") String name, RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-          new Exception(validator.getDescription()));
-      }
-
-      try {
-        userService.removeRole(name, roleDTO.getRole());
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "remove failed", ex);
-      }
-
+    return ControllerExecutor.execute(validator, () -> {
+      userService.removeRole(name, roleDTO.getRole());
       return ResponseEntity.ok().body(new MessageDTO("ok"));
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
+    }, "remove failed");
   }
 
   @GetMapping(path = "/{login}/roles")
   public ResponseEntity<?> remove(@PathVariable("login") String name) {
     var validator = new UserValidator().validateLogin(name);
 
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-          new Exception(validator.getDescription()));
-      }
-
-      try {
-        return ResponseEntity.ok().body(userService.getRoles(name));
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "get failed", ex);
-      }
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.ok().body(userService.getRoles(name));
+    }, "get failed");
   }
 
   private static class UserValidator extends Validator {

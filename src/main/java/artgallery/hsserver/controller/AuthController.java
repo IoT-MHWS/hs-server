@@ -17,34 +17,12 @@ class AuthController {
 
   private final AuthService authService;
 
-  public interface RunController {
-    public ResponseEntity<?> run() throws Exception;
-  }
-
-  public ResponseEntity<?> controller(Validator validator, RunController controllerFunc, String serviceErrMsg) {
-    try {
-      if (validator.hasViolations()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "validation isn't passed",
-            new Exception(validator.getDescription()));
-      }
-
-      try {
-        return controllerFunc.run();
-      } catch (Exception ex) {
-        throw new ApiException(HttpStatus.CONFLICT, "register can't be done", ex);
-      }
-
-    } catch (ApiException e) {
-      return ResponseEntity.status(e.get().getStatus()).body(e.get());
-    }
-  }
-
   @PostMapping(path = "/register")
   public ResponseEntity<?> register(@RequestBody UserDTO req) {
     AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
-    return controller(validator, () -> {
+    return ControllerExecutor.execute(validator, () -> {
       authService.register(req);
       return ResponseEntity.ok().body("ok");
     },
@@ -56,7 +34,7 @@ class AuthController {
     AuthValidator validator = new AuthValidator();
     validator.validateLogin(req).validatePassword(req);
 
-    return controller(validator, () -> {
+    return ControllerExecutor.execute(validator, () -> {
       var tokenDTO = authService.login(req);
       return ResponseEntity.ok().body(tokenDTO);
     },
@@ -66,7 +44,7 @@ class AuthController {
 
   @PostMapping("/refresh")
   public ResponseEntity<?> refreshToken(@RequestHeader HttpHeaders reqHeaders) {
-    return controller(new Validator(), () -> {
+    return ControllerExecutor.execute(null, () -> {
       var tokenDTO = authService.refreshToken(reqHeaders);
       return ResponseEntity.ok().body(tokenDTO);
     },
