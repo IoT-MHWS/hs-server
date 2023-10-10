@@ -51,7 +51,7 @@ class AuthController {
         "refresh can't be done");
   }
 
-  private class AuthValidator extends Validator {
+  private static class AuthValidator extends Validator {
     public AuthValidator validateLogin(UserDTO req) {
       if (req.getLogin() == null || req.getLogin().isEmpty()) {
         this.addViolation("login", "user login in not set or empty");
