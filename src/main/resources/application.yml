@@ -11,8 +11,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate.ddl-auto: none
     show-sql: true
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 springdoc:
   api-docs:
