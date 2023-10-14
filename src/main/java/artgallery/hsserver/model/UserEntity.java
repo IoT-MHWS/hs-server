@@ -29,7 +29,7 @@ public class UserEntity {
   @NotBlank(message = "must be not null")
   private String password;
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @EqualsAndHashCode.Exclude
   @JoinTable(
     name = "user_role",
