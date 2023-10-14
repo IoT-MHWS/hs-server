@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16.0-alpine
     environment:
       POSTGRES_USER: ${HS_SERVER_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${HS_SERVER_DATASOURCE_PASSWORD}
@@ -14,7 +14,7 @@ services:
       - ./postgres/entrypoint/:/docker-entrypoint-initdb.d/
 
   liquibase:
-    image: liquibase/liquibase:latest
+    image: liquibase/liquibase:4.24-alpine
     depends_on:
       - postgres
     environment:
