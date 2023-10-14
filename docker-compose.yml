@@ -6,10 +6,12 @@ services:
     environment:
       POSTGRES_USER: ${HS_SERVER_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${HS_SERVER_DATASOURCE_PASSWORD}
+      POSTGRES_DATABASE: ${HS_SERVER_DATASOURCE_DATABASE}
     ports:
       - "${HS_SERVER_DATASOURCE_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./postgres/entrypoint/:/docker-entrypoint-initdb.d/
 
   liquibase:
     image: liquibase/liquibase:latest
