@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16.0-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DATABASE: art
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../../../postgres/entrypoint/:/docker-entrypoint-initdb.d/
+
+  liquibase:
+    image: liquibase/liquibase:4.24-alpine
+    depends_on:
+      - postgres
+    environment:
+      LIQUIBASE_COMMAND_USERNAME: postgres
+      LIQUIBASE_COMMAND_PASSWORD: 1234
+      LIQUIBASE_COMMAND_URL : jdbc:postgresql://postgres:5432/art
+    volumes:
+      - ../../../liquibase/changelog:/liquibase/changelog
+      - ../../../liquibase/liquibase.properties:/liquibase/liquibase.properties
+    command: --defaults-file=/liquibase/liquibase.properties update
