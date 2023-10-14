@@ -1,17 +1,18 @@
-package artgallery.hsserver;
+package artgallery.hsserver.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
+import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
-import artgallery.hsserver.service.AuthService;
+import artgallery.hsserver.util.StringModifier;
 
-@ContextConfiguration
 @SpringBootTest
-public class ExampleTest extends BasicTest {
+@ExtendWith({ TestExtension.class })
+public class AuthServiceTest {
 
   @Autowired
   AuthService authService;
@@ -19,7 +20,8 @@ public class ExampleTest extends BasicTest {
   @Test
   public void addUser() throws RoleDoesNotExistException, InterruptedException {
     var userDTO = new UserDTO();
-    userDTO.setLogin("testlogin");
+    var uniqueLogin = StringModifier.getUniqueString("user");
+    userDTO.setLogin(uniqueLogin);
     userDTO.setPassword("testpwd");
     authService.register(userDTO);
   }

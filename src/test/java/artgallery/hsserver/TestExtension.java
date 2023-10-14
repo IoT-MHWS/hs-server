@@ -2,33 +2,31 @@ package artgallery.hsserver;
 
 import java.io.File;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
-/**
- * BasicTest
- */
-public class BasicTest {
+public class TestExtension implements BeforeAllCallback, CloseableResource {
 
-  public static Slf4jLogConsumer logConsumer = new Slf4jLogConsumer(LoggerFactory.getLogger(ExampleTest.class));
+  private static final Slf4jLogConsumer logConsumer = new Slf4jLogConsumer(LoggerFactory.getLogger(TestExtension.class));
 
-  protected static DockerComposeContainer<?> dockerComposeContainer = new DockerComposeContainer<>(
+  private static final DockerComposeContainer<?> dockerComposeContainer = new DockerComposeContainer<>(
       new File("docker-compose.yml"))
       .withExposedService("postgres", 5432);
 
-  @BeforeAll
-  public static void start() {
+  @Override
+  public void beforeAll(ExtensionContext context) {
     dockerComposeContainer.withLogConsumer("liquibase", logConsumer);
     dockerComposeContainer.start();
   }
 
-  @AfterAll
-  public static void close() {
+  @Override
+  public void close() {
     dockerComposeContainer.close();
   }
 
