@@ -11,13 +11,14 @@ import artgallery.hsserver.exception.RoleDoesNotExistException;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.exception.UserRoleAlreadyExists;
 import artgallery.hsserver.model.Role;
-import artgallery.hsserver.util.StringModifier;
+import jakarta.transaction.Transactional;
 
 /**
  * UserServiceTest
  */
 @SpringBootTest
 @ExtendWith({ TestExtension.class })
+@Transactional
 public class UserServiceTest {
 
   @Autowired
@@ -29,7 +30,7 @@ public class UserServiceTest {
   @Test
   public void addUserRole() throws RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
     var userDTO = new UserDTO();
-    var uniqueLogin = StringModifier.getUniqueString("user");
+    var uniqueLogin = "user";
     var password = "testpwd";
 
     userDTO.setLogin(uniqueLogin);

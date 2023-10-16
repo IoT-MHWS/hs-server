@@ -8,10 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
-import artgallery.hsserver.util.StringModifier;
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @ExtendWith({ TestExtension.class })
+@Transactional
 public class AuthServiceTest {
 
   @Autowired
@@ -20,7 +21,7 @@ public class AuthServiceTest {
   @Test
   public void addUser() throws RoleDoesNotExistException, InterruptedException {
     var userDTO = new UserDTO();
-    var uniqueLogin = StringModifier.getUniqueString("user");
+    var uniqueLogin = "user";
     userDTO.setLogin(uniqueLogin);
     userDTO.setPassword("testpwd");
     authService.register(userDTO);

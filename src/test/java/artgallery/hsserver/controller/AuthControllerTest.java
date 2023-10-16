@@ -14,11 +14,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.UserDTO;
-import artgallery.hsserver.util.StringModifier;
+import jakarta.transaction.Transactional;
 
 @AutoConfigureMockMvc
 @SpringBootTest
 @ExtendWith({ TestExtension.class })
+@Transactional
 public class AuthControllerTest {
 
   @Autowired
@@ -29,7 +30,7 @@ public class AuthControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     UserDTO userDTO = new UserDTO();
-    userDTO.setLogin(StringModifier.getUniqueString("user"));
+    userDTO.setLogin("user");
     userDTO.setPassword("user");
     String userDTOString = objectMapper.writeValueAsString(userDTO);
 
