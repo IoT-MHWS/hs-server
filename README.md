@@ -23,13 +23,6 @@ Start `docker-compose.yml`:
 docker compose up [-d]
 ```
 
-Create database as set in environment variable `HS_SERVER_DATASOURCE_DATABASE` for `postgres`:
-
-```bash
-psql -U postgres
-> create database <HS_SERVER_DATASOURCE_DATABASE>;
-```
-
 > Connection to running container could be done with `docker exec -it <container_id> bash`
 
 Start an application with envvars set:
