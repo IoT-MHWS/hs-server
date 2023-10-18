@@ -21,20 +21,25 @@ public class PaintingEntity {
   @Column(name = "id")
   private long id;
 
+  @NotNull(message = "name must be not null")
+  @Column(name = "name")
+  String name;
+
   @Column(name = "year_of_creation")
   Integer yearOfCreation;
 
-  @NotNull(message = "must be not null")
-  @Enumerated(EnumType.STRING)
-  @Column(name = "style")
-  private Style style;
+//  @NotNull(message = "must be not null")
+//  @Enumerated(EnumType.STRING)
+//  @Column(name = "style")
+////  private Style style;
+//  private Style style;
 
   @ManyToOne()
   @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false)
   private ArtistEntity artistEntity;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "gallery_painting", joinColumns = @JoinColumn(name = "painting_id"), inverseJoinColumns = @JoinColumn(name = "gallery_id"))
-  private List<GalleryEntity> galleries;
+  @OneToMany(mappedBy = "painting")
+  @ToString.Exclude
+  private List<GalleryPaintingEntity> galleryPaintings;
 
 }
