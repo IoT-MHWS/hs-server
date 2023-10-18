@@ -22,7 +22,7 @@ public class ExhibitionEntity {
   private long id;
 
   @Column(name = "name")
-  String name;
+  private String name;
 
   @NotNull(message = "date must be not null")
   @Column(name = "start_date")
@@ -33,6 +33,6 @@ public class ExhibitionEntity {
   private Date endDate;
 
   @ManyToOne()
-  @JoinColumn(name = "gallery_id", referencedColumnName = "id")
+  @JoinColumn(name = "gallery_id") //, referencedColumnName = "id"
   private GalleryEntity gallery;
 }
