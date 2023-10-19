@@ -3,10 +3,6 @@ package artgallery.hsserver.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,17 +20,18 @@ public class GalleryEntity {
   @Column(name = "id")
   private long id;
 
-  @NotNull(message = "date must be not null")
-  @Column(name = "date")
-  private Date date;
+  @NotNull(message = "name must be not null")
+  @Column(name = "name")
+  private String name;
 
-  @ManyToMany(mappedBy = "galleries")
-  @Fetch(FetchMode.SUBSELECT)
-  @ToString.Exclude
-  private List<PaintingEntity> paintings;
+  @Column(name = "address")
+  private String address;
 
   @OneToMany(mappedBy = "gallery")
   @ToString.Exclude
   private List<ExhibitionEntity> exhibitions;
 
+  @OneToMany(mappedBy = "gallery")
+  @ToString.Exclude
+  private List<GalleryPaintingEntity> galleryPaintings;
 }

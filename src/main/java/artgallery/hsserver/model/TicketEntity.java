@@ -1,6 +1,7 @@
 package artgallery.hsserver.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -19,13 +20,19 @@ public class TicketEntity {
   private long id;
 
   @Column(name = "description")
-  String description;
+  private String description;
 
+  @NotNull(message = "price must be not null")
   @Column(name = "price")
-  Integer price;
+  private Integer price;
 
   @ManyToOne()
+  @JoinColumn(name = "exhibition_id")
+  @ToString.Exclude
+  private ExhibitionEntity exhibition;
+
+  @ManyToOne
   @JoinColumn(name = "order_id")
   @ToString.Exclude
-  private OrderEntity orderEntity;
+  private OrderEntity order;
 }

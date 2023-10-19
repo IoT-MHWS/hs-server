@@ -1,6 +1,7 @@
 package artgallery.hsserver.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -19,9 +20,19 @@ public class ArtistEntity {
   @Column(name = "id")
   private long id;
 
+  @Column(name = "name")
+  private String name;
+
+  @NotNull(message = "year_of_birth must be not null")
   @Column(name = "year_of_birth")
-  Integer yearOfBirth;
+  private Integer yearOfBirth;
 
   @Column(name = "bio")
-  String bio;
+  private String bio;
+
+  @NotNull(message = "must be not null")
+  @Enumerated(EnumType.STRING)
+  @Column(name = "style")
+//  private Style style;
+  private Style style;
 }

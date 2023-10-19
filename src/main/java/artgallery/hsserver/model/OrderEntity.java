@@ -26,12 +26,12 @@ public class OrderEntity {
   @Column(name = "date")
   private Date date;
 
-  @NotNull(message = "not null")
+  @NotNull(message = "user must be not null")
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private UserEntity userEntity;
+  private UserEntity user;
 
-  @OneToMany(mappedBy = "orderEntity")
+  @OneToMany(mappedBy = "order")
   @ToString.Exclude
   private List<TicketEntity> ticketEntities;
 }
