@@ -4,7 +4,6 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
-import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -16,23 +15,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/artist")
+@RequestMapping("/api/v1/artists")
 @RequiredArgsConstructor
 public class ArtistController {
   private final ArtistService artistService;
 
-  @GetMapping("/all")
+  @GetMapping("/")
   public ResponseEntity<?> getAllArtists(@RequestParam(value = "page", defaultValue = "0") int page,
-                                         @RequestParam(value = "size", defaultValue = "10") @Max(50) int size) {
+                                         @RequestParam(value = "size", defaultValue = "10") int size) {
     ArtistValidator validator = new ArtistValidator();
-    Page<ArtistDTO> artistsPage = artistService.getAllArtists(page, size);
-    List<ArtistDTO> artists = artistsPage.getContent();
-    for (ArtistDTO artistDTO : artists) {
-      validator.validateArtist(artistDTO);
-    }
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Artists-Count", String.valueOf(artistsPage.getTotalElements()));
+    validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
+        Page<ArtistDTO> artistsPage = artistService.getAllArtists(page, size);
+        List<ArtistDTO> artists = artistsPage.getContent();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Artists-Count", String.valueOf(artistsPage.getTotalElements()));
         return ResponseEntity.ok().headers(headers).body(artists);
       },
       "correct artists can't be found");
@@ -43,7 +40,6 @@ public class ArtistController {
   public ResponseEntity<?> getArtistById(@PathVariable("id") long id) {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {
-      validator.validateArtist(artistService.getArtistById(id));
       return ResponseEntity.ok().body(artistService.getArtistById(id));
     }, "this artist does not exist");
   }
@@ -53,7 +49,6 @@ public class ArtistController {
   public ResponseEntity<?> createArtist(@RequestBody ArtistDTO req) {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
-
     return ControllerExecutor.execute(validator, () -> {
       artistService.createArtist(req);
       return ResponseEntity.ok().body("ok");
@@ -75,7 +70,6 @@ public class ArtistController {
   @DeleteMapping("/{id}")
   public ResponseEntity<?> deleteArtist(@PathVariable("id") long id) {
     ArtistValidator validator = new ArtistValidator();
-
     return ControllerExecutor.execute(validator, () -> {
       artistService.deleteArtist(id);
       return ResponseEntity.ok().body("ok");
@@ -84,6 +78,11 @@ public class ArtistController {
 
 
   private static class ArtistValidator extends Validator {
+    public ArtistValidator validateSize(int size){
+      if (size > 50) {
+        this.addViolation("size", "size must be <= 50");
+      } return this;
+    }
 
     public ArtistValidator validateArtist(ArtistDTO req) {
       if (req == null) {
@@ -97,9 +96,6 @@ public class ArtistController {
       }
       if (Arrays.stream(Style.values()).map(Enum::name).collect(Collectors.toList()).contains(req.getStyle())) {
         this.addViolation("style", "style in not correct");
-      }
-      if (req.getId() < 0) {
-        this.addViolation("id", "id is < 0");
       }
       return this;
     }
