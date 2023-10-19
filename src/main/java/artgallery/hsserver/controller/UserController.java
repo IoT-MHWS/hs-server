@@ -22,7 +22,7 @@ public class UserController {
 
   @PostMapping(path = "/{login}/roles/add")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<?> add(@PathVariable("login") String name, RoleDTO roleDTO) {
+  public ResponseEntity<?> addRole(@PathVariable("login") String name, @RequestBody RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
     return ControllerExecutor.execute(validator, () -> {
@@ -33,7 +33,7 @@ public class UserController {
 
   @PostMapping(path = "/{login}/roles/remove")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<?> remove(@PathVariable("login") String name, RoleDTO roleDTO) {
+  public ResponseEntity<?> removeRole(@PathVariable("login") String name, @RequestBody RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
     return ControllerExecutor.execute(validator, () -> {
@@ -43,7 +43,7 @@ public class UserController {
   }
 
   @GetMapping(path = "/{login}/roles")
-  public ResponseEntity<?> remove(@PathVariable("login") String name) {
+  public ResponseEntity<?> listUserRoles(@PathVariable("login") String name) {
     var validator = new UserValidator().validateLogin(name);
 
     return ControllerExecutor.execute(validator, () -> {
