@@ -39,7 +39,7 @@ public class TicketService {
 
   @Transactional
   public TicketDTO createTicket(TicketDTO ticketDTO) throws ExhibitionDoesNotExistException, OrderDoesNotExistException {
-    TicketEntity ticket = mapToTicketEntity(ticketDTO);
+    TicketEntity ticket = mapToTicketEntity(ticketDTO, takeExhibition(ticketDTO.getExhibitionId()));
     TicketEntity createdTicket = ticketRepository.save(ticket);
     return mapToTicketDto(createdTicket);
   }
@@ -70,7 +70,6 @@ public class TicketService {
     }
   }
 
-
   private TicketDTO mapToTicketDto(TicketEntity ticketEntity) {
     return new TicketDTO(ticketEntity.getId(), ticketEntity.getDescription(),
       ticketEntity.getPrice(), ticketEntity.getExhibition().getId());
@@ -80,16 +79,18 @@ public class TicketService {
     return ticketEntities.stream().map(this::mapToTicketDto)
       .collect(Collectors.toList());
   }
-  private TicketEntity mapToTicketEntity(TicketDTO ticketDto) throws ExhibitionDoesNotExistException, OrderDoesNotExistException {
+
+  private ExhibitionEntity takeExhibition(Long exhibitionId) throws ExhibitionDoesNotExistException {
+    ExhibitionEntity exh = exhibitionRepository.findById(exhibitionId).orElseThrow(() ->
+      new ExhibitionDoesNotExistException(exhibitionId));
+    return exh;
+  }
+
+  private TicketEntity mapToTicketEntity(TicketDTO ticketDto, ExhibitionEntity exh){
     TicketEntity ticket = new TicketEntity();
     ticket.setDescription(ticketDto.getDescription());
     ticket.setPrice(ticketDto.getPrice());
-    ExhibitionEntity exh = exhibitionRepository.findById(ticketDto.getExhibitionId()).orElseThrow(() ->
-      new ExhibitionDoesNotExistException(ticketDto.getExhibitionId()));
     ticket.setExhibition(exh);
-
-//    OrderEntity orderEntity = orderRepository.findById(ticketDto.getOrderId()).orElseThrow(() ->
-//      new OrderDoesNotExistException(ticketDto.getOrderId()));
     return ticket;
   }
 }

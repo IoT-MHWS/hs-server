@@ -45,7 +45,8 @@ public class GalleryService {
 
   @Transactional
   public GalleryDTO createGallery(GalleryDTO galleryDto) throws PaintingDoesNotExistException {
-    GalleryEntity gallery = mapToGalleryEntity(galleryDto);
+    List<GalleryPaintingEntity> galleryPaintingEntities = takeGalleryPaintings(galleryDto);
+    GalleryEntity gallery = mapToGalleryEntity(galleryDto, galleryPaintingEntities);
     GalleryEntity createdGallery= null;
 
     for (Long paintingId : galleryDto.getPaintingsId()) {
@@ -72,9 +73,7 @@ public class GalleryService {
       GalleryEntity existingGallery = optionalGallery.get();
       existingGallery.setName(galleryDto.getName());
       existingGallery.setAddress(galleryDto.getAddress());
-      for (Long paintingId : galleryDto.getPaintingsId()) {
-        galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(paintingId);
-      }
+      galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(id);
       GalleryEntity updatedGallery = galleryRepository.save(existingGallery);
       for (Long paintingId : galleryDto.getPaintingsId()) {
         PaintingEntity painting = paintingRepository.findById(paintingId)
@@ -121,15 +120,17 @@ public class GalleryService {
       .collect(Collectors.toList());
   }
 
-  private GalleryEntity mapToGalleryEntity(GalleryDTO galleryDto) {
+  private List<GalleryPaintingEntity> takeGalleryPaintings(GalleryDTO galleryDto){
+    List<Long> gpIds = galleryDto.getPaintingsId();
+    List<GalleryPaintingEntity> galleryPaintingEntities = galleryPaintingRepository.findAllById(gpIds);
+    return galleryPaintingEntities;
+  }
+
+  private GalleryEntity mapToGalleryEntity(GalleryDTO galleryDto, List<GalleryPaintingEntity> gpList) {
     GalleryEntity gallery = new GalleryEntity();
     gallery.setName(galleryDto.getName());
     gallery.setAddress(galleryDto.getAddress());
-
-    List<Long> gpIds = galleryDto.getPaintingsId();
-    List<GalleryPaintingEntity> galleryPaintingEntities = galleryPaintingRepository.findAllById(gpIds);
-
-    gallery.setGalleryPaintings(galleryPaintingEntities);
+    gallery.setGalleryPaintings(gpList);
     return gallery;
   }
 }

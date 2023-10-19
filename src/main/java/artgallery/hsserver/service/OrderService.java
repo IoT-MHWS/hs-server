@@ -46,7 +46,7 @@ public class OrderService {
 
   @Transactional
   public OrderDTO createOrder(OrderDTO orderDTO) throws UserDoesNotExistException, TicketDoesNotExistException {
-    OrderEntity order = mapToOrderEntity(orderDTO);
+    OrderEntity order = mapToOrderEntity(orderDTO, takeUser(orderDTO.getUserLogin()), takeOrders(orderDTO));
     List<TicketEntity> ticketEntities = new ArrayList<>();
     for (Long ticketId : orderDTO.getTicketsId()) {
       Optional<TicketEntity> ticketOptional = ticketRepository.findById(ticketId);
@@ -96,16 +96,24 @@ public class OrderService {
     return orders.stream().map(this::mapToOrderDto)
       .collect(Collectors.toList());
   }
-  private OrderEntity mapToOrderEntity(OrderDTO orderDto) throws UserDoesNotExistException {
+
+  private List<TicketEntity> takeOrders(OrderDTO orderDTO){
+    List<Long> tIds = orderDTO.getTicketsId();
+    List<TicketEntity> ticketEntities = ticketRepository.findAllById(tIds);
+    return ticketEntities;
+  }
+
+  private UserEntity takeUser(String login) throws UserDoesNotExistException {
+    UserEntity userEntity = userRepository.findByLogin(login).orElseThrow(() ->
+      new UserDoesNotExistException(login));
+    return userEntity;
+  }
+
+  private OrderEntity mapToOrderEntity(OrderDTO orderDto, UserEntity user, List<TicketEntity> tIds) {
     OrderEntity order = new OrderEntity();
     order.setDate(orderDto.getDate());
-    UserEntity userEntity = userRepository.findByLogin(orderDto.getUserLogin()).orElseThrow(() ->
-      new UserDoesNotExistException(orderDto.getUserLogin()));
-    List<Long> ticketIds = orderDto.getTicketsId();
-    List<TicketEntity> ticketEntities = ticketRepository.findAllById(ticketIds);
-
-    order.setUser(userEntity);
-    order.setTicketEntities(ticketEntities);
+    order.setUser(user);
+    order.setTicketEntities(tIds);
     return order;
   }
 }
