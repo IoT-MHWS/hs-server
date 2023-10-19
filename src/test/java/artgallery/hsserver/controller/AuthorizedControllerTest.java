@@ -4,6 +4,7 @@ import artgallery.hsserver.dto.TokenDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.repository.UserRepository;
 import artgallery.hsserver.service.AuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 public abstract class AuthorizedControllerTest {
   protected static String username = "user";
   protected static String password = "password";
+
+  static protected final ObjectMapper objectMapper = new ObjectMapper();
 
   protected static TokenDTO tokenDTO;
 

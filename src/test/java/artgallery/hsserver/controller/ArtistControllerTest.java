@@ -5,7 +5,6 @@ import artgallery.hsserver.dto.ArtistDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +39,6 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
 
   @Test
   void testArtistCreation() throws Exception {
-    ObjectMapper objectMapper = new ObjectMapper();
-
     String request = objectMapper.writeValueAsString(artistDTO);
 
     MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/artists")
@@ -65,8 +62,6 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
 
   @Test
   void testArtistsCounting() throws Exception {
-    ObjectMapper objectMapper = new ObjectMapper();
-
     MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artists/")
         .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
         .accept(MediaType.APPLICATION_JSON))
@@ -96,8 +91,6 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
 
     @Test
     void testArtistRetrieving() throws Exception {
-      ObjectMapper objectMapper = new ObjectMapper();
-
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artists/{id}", artistDTO.getId())
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
           .accept(MediaType.APPLICATION_JSON))
@@ -118,8 +111,6 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
 
     @Test
     void testArtistsListing() throws Exception {
-      ObjectMapper objectMapper = new ObjectMapper();
-
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artists/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
           .accept(MediaType.APPLICATION_JSON))
