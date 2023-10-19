@@ -1,9 +1,6 @@
 package artgallery.hsserver.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * TokenDTO
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class TokenDTO {
   private String jwtToken;
   private String refreshToken;
