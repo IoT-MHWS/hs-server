@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class ExhibitionService {
     return mapToExhibitionDto(createdExhibition);
   }
 
+  @Transactional
   public ExhibitionDTO updateExhibition(long id, ExhibitionDTO exhibitionDTO) throws ExhibitionDoesNotExistException, GalleryDoesNotExistException {
     Optional<ExhibitionEntity> exhibition = exhibitionRepository.findById(id);
     if (exhibition.isPresent()) {
@@ -58,6 +60,7 @@ public class ExhibitionService {
     throw new ExhibitionDoesNotExistException(id);
   }
 
+  @Transactional
   public void deleteExhibition(long id) throws ExhibitionDoesNotExistException {
     if (exhibitionRepository.existsById(id)) {
       exhibitionRepository.deleteById(id);
