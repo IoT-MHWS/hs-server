@@ -39,8 +39,7 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     validator.validateExhibition(req);
     return ControllerExecutor.execute(validator, () -> {
-      exhibitionService.createExhibition(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(exhibitionService.createExhibition(req));
     }, "cannot create exhibition");
   }
 
