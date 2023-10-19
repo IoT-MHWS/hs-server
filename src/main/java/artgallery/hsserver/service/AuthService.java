@@ -10,6 +10,7 @@ import artgallery.hsserver.model.Role;
 import artgallery.hsserver.model.UserEntity;
 import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +36,7 @@ public class AuthService {
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
 
+  @Transactional
   public void register(UserDTO req) throws RoleDoesNotExistException {
     var userEntity = UserEntity.builder()
       .login(req.getLogin())

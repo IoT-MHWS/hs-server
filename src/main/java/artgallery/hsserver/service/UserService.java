@@ -10,6 +10,7 @@ import artgallery.hsserver.model.RoleEntity;
 import artgallery.hsserver.model.UserEntity;
 import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
 
+  @Transactional
   public void addRole(String login, Role role)
     throws UserDoesNotExistException, RoleDoesNotExistException, UserRoleAlreadyExists {
     UserEntity userEntity = userRepository.findByLogin(login)
@@ -42,6 +44,7 @@ public class UserService {
     userRepository.save(userEntity);
   }
 
+  @Transactional
   public void removeRole(String login, Role role)
     throws UserDoesNotExistException, RoleDoesNotExistException, UserRoleDoesNotExist {
     UserEntity userEntity = userRepository.findByLogin(login)
