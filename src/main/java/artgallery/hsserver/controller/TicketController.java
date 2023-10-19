@@ -38,8 +38,7 @@ public class TicketController {
     TicketValidator validator = new TicketValidator();
     validator.validateTicket(req);
     return ControllerExecutor.execute(validator, () -> {
-      ticketService.createTicket(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(ticketService.createTicket(req));
     }, "cannot create ticket");
   }
 

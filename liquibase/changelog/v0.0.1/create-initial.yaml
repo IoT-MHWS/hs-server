@@ -164,6 +164,11 @@ databaseChangeLog:
               - column:
                   name: order_id
                   type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: exhibition_id
+                  type: BIGINT
         - createTable:
             tableName: user
             columns:
