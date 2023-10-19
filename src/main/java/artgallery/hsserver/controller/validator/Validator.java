@@ -22,10 +22,6 @@ public class Validator {
     return !violations.isEmpty();
   }
 
-  public List<Violation> getViolations() {
-    return violations;
-  }
-
   public String getDescription() {
     return violations.toString();
   }
