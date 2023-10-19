@@ -104,6 +104,24 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
     }
 
     @Test
+    void testExhibitionUpdating() throws Exception {
+      String request = objectMapper.writeValueAsString(exhibitionDTO);
+
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/exhibitions/{id}", exhibitionDTO.getId())
+          .content(request)
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .contentType(MediaType.APPLICATION_JSON)
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals("ok", response.getContentAsString())
+      );
+    }
+
+    @Test
     void testExhibitionsListing() throws Exception {
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/exhibitions/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))

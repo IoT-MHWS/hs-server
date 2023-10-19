@@ -93,6 +93,24 @@ public class OrderControllerTest extends AuthorizedControllerTest {
     }
 
     @Test
+    void testOrderUpdating() throws Exception {
+      String request = objectMapper.writeValueAsString(orderDTO);
+
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/orders/{id}", orderDTO.getId())
+          .content(request)
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .contentType(MediaType.APPLICATION_JSON)
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals("ok", response.getContentAsString())
+      );
+    }
+
+    @Test
     void testOrdersListing() throws Exception {
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/orders/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))

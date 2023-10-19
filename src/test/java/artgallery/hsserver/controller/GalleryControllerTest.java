@@ -90,6 +90,24 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     }
 
     @Test
+    void testGalleryUpdating() throws Exception {
+      String request = objectMapper.writeValueAsString(galleryDTO);
+
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/galleries/{id}", galleryDTO.getId())
+          .content(request)
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .contentType(MediaType.APPLICATION_JSON)
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals("ok", response.getContentAsString())
+      );
+    }
+
+    @Test
     void testGalleriesListing() throws Exception {
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/galleries/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))

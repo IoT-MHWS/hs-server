@@ -104,6 +104,24 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
     }
 
     @Test
+    void testPaintingUpdating() throws Exception {
+      String request = objectMapper.writeValueAsString(paintingDTO);
+
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/paintings/{id}", paintingDTO.getId())
+          .content(request)
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .contentType(MediaType.APPLICATION_JSON)
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals("ok", response.getContentAsString())
+      );
+    }
+
+    @Test
     void testPaintingsListing() throws Exception {
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/paintings/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
