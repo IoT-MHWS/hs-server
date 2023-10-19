@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ArtistService {
   private final ArtistRepository artistRepository;
-
-//  public List<ArtistDTO> getAllArtists(int page, int size) {
-//    Pageable pageable = PageRequest.of(page, size);
-//    Page<ArtistEntity> artistPage = artistRepository.findAll(pageable);
-//
-//    List<ArtistEntity> artists = artistPage.getContent();
-//    return mapToArtistDtoList(artists);
-//  }
 
   public Page<ArtistDTO> getAllArtists(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
@@ -51,6 +44,7 @@ public class ArtistService {
     return mapToArtistDto(createdArtist);
   }
 
+  @Transactional
   public ArtistDTO updateArtist(long id, ArtistDTO artistDTO) throws ArtistDoesNotExistException{
     Optional<ArtistEntity> optionalArtist = artistRepository.findById(id);
     if (optionalArtist.isPresent()) {
@@ -59,12 +53,13 @@ public class ArtistService {
       existingArtist.setYearOfBirth(artistDTO.getYearOfBirth());
       existingArtist.setBio(artistDTO.getBio());
 
-      existingArtist.setStyle(artistDTO.getStyle()); //---------------
+      existingArtist.setStyle(artistDTO.getStyle());
       ArtistEntity updatedArtist = artistRepository.save(existingArtist);
       return mapToArtistDto(updatedArtist);
     } throw new ArtistDoesNotExistException(id);
   }
 
+  @Transactional
   public void deleteArtist(long id) throws ArtistDoesNotExistException {
     if (artistRepository.existsById(id)) {
       artistRepository.deleteById(id);
@@ -73,7 +68,7 @@ public class ArtistService {
     }
   }
 
-  private ArtistDTO mapToArtistDto(ArtistEntity artist) { //---------------
+  private ArtistDTO mapToArtistDto(ArtistEntity artist) {
       return new ArtistDTO(artist.getId(), artist.getName(), artist.getYearOfBirth(), artist.getBio(), artist.getStyle());
   }
 
@@ -88,7 +83,7 @@ public class ArtistService {
     artist.setName(artistDTO.getName());
     artist.setYearOfBirth(artistDTO.getYearOfBirth());
     artist.setBio(artistDTO.getBio());
-    artist.setStyle(artistDTO.getStyle());//---------------
+    artist.setStyle(artistDTO.getStyle());
     return artist;
   }
 

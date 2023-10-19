@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,18 +44,7 @@ public class OrderService {
 
   }
 
-//  public OrderDTO createOrder(OrderDTO orderDTO) throws UserDoesNotExistException, TicketDoesNotExistException {
-//    OrderEntity order = mapToOrderEntity(orderDTO);
-//    List<TicketEntity> ticketEntities = new ArrayList<>();
-//    for (Long ticketId : orderDTO.getTicketsId()) {
-//      Optional<TicketEntity> ticketOptional = ticketRepository.findById(ticketId).orElseThrow(() ->
-//        new TicketDoesNotExistException(ticketId));
-//    }
-//    order.setTicketEntities(ticketEntities);
-//    OrderEntity createdOrder = orderRepository.save(order);
-//    return mapToOrderDto(createdOrder);
-//  }
-
+  @Transactional
   public OrderDTO createOrder(OrderDTO orderDTO) throws UserDoesNotExistException, TicketDoesNotExistException {
     OrderEntity order = mapToOrderEntity(orderDTO);
     List<TicketEntity> ticketEntities = new ArrayList<>();
@@ -71,12 +61,14 @@ public class OrderService {
     return mapToOrderDto(createdOrder);
   }
 
+  @Transactional
   public OrderDTO updateOrder(long id, OrderDTO orderDTO) throws OrderDoesNotExistException, UserDoesNotExistException {
     Optional<OrderEntity> order = orderRepository.findById(id);
     if (order.isPresent()) {
       OrderEntity ord = order.get();
       ord.setDate(orderDTO.getDate());
-      UserEntity ott = userRepository.findByLogin(orderDTO.getUserLogin()).orElseThrow(() -> new UserDoesNotExistException(orderDTO.getUserLogin()));
+      UserEntity ott = userRepository.findByLogin(orderDTO.getUserLogin()).orElseThrow(() ->
+        new UserDoesNotExistException(orderDTO.getUserLogin()));
       ord.setUser(ott);
       OrderEntity newOrder = orderRepository.save(ord);
       return mapToOrderDto(newOrder);
@@ -84,6 +76,7 @@ public class OrderService {
     throw new OrderDoesNotExistException(id);
   }
 
+  @Transactional
   public void deleteOrder(long id) throws OrderDoesNotExistException {
     if (orderRepository.existsById(id)) {
       orderRepository.deleteById(id);
@@ -106,7 +99,8 @@ public class OrderService {
   private OrderEntity mapToOrderEntity(OrderDTO orderDto) throws UserDoesNotExistException {
     OrderEntity order = new OrderEntity();
     order.setDate(orderDto.getDate());
-    UserEntity userEntity = userRepository.findByLogin(orderDto.getUserLogin()).orElseThrow(() -> new UserDoesNotExistException(orderDto.getUserLogin()));
+    UserEntity userEntity = userRepository.findByLogin(orderDto.getUserLogin()).orElseThrow(() ->
+      new UserDoesNotExistException(orderDto.getUserLogin()));
     List<Long> ticketIds = orderDto.getTicketsId();
     List<TicketEntity> ticketEntities = ticketRepository.findAllById(ticketIds);
 

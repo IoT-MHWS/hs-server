@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +37,14 @@ public class TicketService {
 
   }
 
+  @Transactional
   public TicketDTO createTicket(TicketDTO ticketDTO) throws ExhibitionDoesNotExistException, OrderDoesNotExistException {
     TicketEntity ticket = mapToTicketEntity(ticketDTO);
     TicketEntity createdTicket = ticketRepository.save(ticket);
     return mapToTicketDto(createdTicket);
   }
 
+  @Transactional
   public TicketDTO updateTicket(long id, TicketDTO ticketDTO) throws TicketDoesNotExistException, ExhibitionDoesNotExistException {
     Optional<TicketEntity> ticket = ticketRepository.findById(id);
     if (ticket.isPresent()) {
@@ -58,6 +61,7 @@ public class TicketService {
     throw new TicketDoesNotExistException(id);
   }
 
+  @Transactional
   public void deleteTicket(long id) throws TicketDoesNotExistException {
     if (ticketRepository.existsById(id)) {
       ticketRepository.deleteById(id);
