@@ -13,6 +13,6 @@ import java.util.List;
 public class GalleryDTO {
   private long id;
   private String name;
-  private String adress;
+  private String address;
   private List<Long> paintingsId;
 }
