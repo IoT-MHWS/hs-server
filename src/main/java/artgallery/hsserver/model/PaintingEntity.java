@@ -23,16 +23,10 @@ public class PaintingEntity {
 
   @NotNull(message = "name must be not null")
   @Column(name = "name")
-  String name;
+  private String name;
 
   @Column(name = "year_of_creation")
-  Integer yearOfCreation;
-
-//  @NotNull(message = "must be not null")
-//  @Enumerated(EnumType.STRING)
-//  @Column(name = "style")
-////  private Style style;
-//  private Style style;
+  private Integer yearOfCreation;
 
   @ManyToOne()
   @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false)

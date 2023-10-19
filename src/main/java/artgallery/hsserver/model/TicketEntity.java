@@ -20,11 +20,11 @@ public class TicketEntity {
   private long id;
 
   @Column(name = "description")
-  String description;
+  private String description;
 
   @NotNull(message = "price must be not null")
   @Column(name = "price")
-  Integer price;
+  private Integer price;
 
   @ManyToOne()
   @JoinColumn(name = "exhibition_id")
