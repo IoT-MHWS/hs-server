@@ -39,8 +39,7 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     validator.validateOrder(req);
     return ControllerExecutor.execute(validator, () -> {
-      orderService.createOrder(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(orderService.createOrder(req));
     }, "cannot create order");
   }
 
