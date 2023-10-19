@@ -66,11 +66,20 @@ databaseChangeLog:
               - column:
                   constraints:
                     nullable: false
-                  name: date
-                  type: DATETIME
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: address
+                  type: VARCHAR(255)
         - createTable:
             tableName: gallery_painting
             columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
               - column:
                   constraints:
                     nullable: false
