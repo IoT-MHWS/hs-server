@@ -113,6 +113,7 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
     void testArtistsListing() throws Exception {
       MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artists/")
           .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .queryParam("size", "50")
           .accept(MediaType.APPLICATION_JSON))
         .andReturn();
       MockHttpServletResponse response = result.getResponse();

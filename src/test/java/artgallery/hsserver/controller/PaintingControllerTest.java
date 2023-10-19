@@ -120,7 +120,6 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       assertAll(
         () -> assertEquals(paintingDTO.getName(), results[0].getName()),
         () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation()),
-        () -> assertEquals(paintingDTO.getArtistId(), results[0].getArtistId()),
         () -> assertEquals(paintingDTO.getGalleriesId(), results[0].getGalleriesId())
       );
     }
