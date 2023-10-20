@@ -29,7 +29,7 @@ public class ArtistController {
         Page<ArtistDTO> artistsPage = artistService.getAllArtists(page, size);
         List<ArtistDTO> artists = artistsPage.getContent();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Artists-Count", String.valueOf(artistsPage.getTotalElements()));
+        headers.add("X-Total-Count", String.valueOf(artistsPage.getTotalElements()));
         return ResponseEntity.ok().headers(headers).body(artists);
       },
       "correct artists can't be found");
@@ -50,8 +50,7 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
     return ControllerExecutor.execute(validator, () -> {
-      artistService.createArtist(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(artistService.createArtist(req));
     }, "cannot create artist");
   }
 

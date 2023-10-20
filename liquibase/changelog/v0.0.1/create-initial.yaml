@@ -14,6 +14,16 @@ databaseChangeLog:
                   name: id
                   type: BIGSERIAL
               - column:
+                  name: name
+                  constraints:
+                    nullable: false
+                  type: VARCHAR(255)
+              - column:
+                  name: style
+                  constraints:
+                    nullable: false
+                  type: VARCHAR(255)
+              - column:
                   name: year_of_birth
                   type: INT
               - column:
@@ -56,11 +66,20 @@ databaseChangeLog:
               - column:
                   constraints:
                     nullable: false
-                  name: date
-                  type: DATETIME
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: address
+                  type: VARCHAR(255)
         - createTable:
             tableName: gallery_painting
             columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGSERIAL
               - column:
                   constraints:
                     nullable: false
@@ -71,6 +90,9 @@ databaseChangeLog:
                     nullable: false
                   name: painting_id
                   type: BIGINT
+              - column:
+                  name: description
+                  type: VARCHAR(255)
         - createTable:
             tableName: order
             columns:
@@ -100,13 +122,13 @@ databaseChangeLog:
                   name: id
                   type: BIGSERIAL
               - column:
-                  name: year_of_creation
-                  type: INT
-              - column:
                   constraints:
                     nullable: false
-                  name: style
+                  name: name
                   type: VARCHAR(255)
+              - column:
+                  name: year_of_creation
+                  type: INT
               - column:
                   constraints:
                     nullable: false
@@ -141,6 +163,11 @@ databaseChangeLog:
                   type: INT
               - column:
                   name: order_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: exhibition_id
                   type: BIGINT
         - createTable:
             tableName: user

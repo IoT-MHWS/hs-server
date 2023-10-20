@@ -47,23 +47,21 @@ public class GalleryService {
   public GalleryDTO createGallery(GalleryDTO galleryDto) throws PaintingDoesNotExistException {
     List<GalleryPaintingEntity> galleryPaintingEntities = takeGalleryPaintings(galleryDto);
     GalleryEntity gallery = mapToGalleryEntity(galleryDto, galleryPaintingEntities);
-    GalleryEntity createdGallery= null;
+    galleryRepository.save(gallery);
 
     for (Long paintingId : galleryDto.getPaintingsId()) {
       PaintingEntity painting = paintingRepository.findById(paintingId)
         .orElseThrow(() -> new PaintingDoesNotExistException(paintingId));
 
       GalleryPaintingEntity galleryPainting = new GalleryPaintingEntity();
-      createdGallery = galleryRepository.save(gallery);
-      galleryPainting.setGallery(createdGallery);
+      galleryPainting.setGallery(gallery);
       galleryPainting.setPainting(painting);
       galleryPainting.setDescription("done from Gallery");
 
       galleryPaintingRepository.save(galleryPainting);
     }
 
-
-    return mapToGalleryDto(createdGallery);
+    return mapToGalleryDto(gallery);
   }
 
   @Transactional
@@ -94,14 +92,18 @@ public class GalleryService {
 
   @Transactional
   public void deleteGallery(long id) throws GalleryDoesNotExistException, PaintingDoesNotExistException {
-
-    if (galleryRepository.existsById(id)) {
+    if (galleryPaintingRepository.existsByGalleryId(id)) {
       try {
         galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(id);
+      } catch (Exception e) {
+        throw new PaintingDoesNotExistException(id);
+      }
+    }
+    if (galleryRepository.existsById(id)) {
+      try {
         galleryRepository.deleteById(id);
       } catch (Exception e) {
-
-        throw new PaintingDoesNotExistException(id);
+        throw new GalleryDoesNotExistException(id);
       }
     } else {
       throw new GalleryDoesNotExistException(id);

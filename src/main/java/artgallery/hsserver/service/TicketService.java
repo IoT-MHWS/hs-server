@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class TicketService {
   private final TicketRepository ticketRepository;
   private final ExhibitionRepository exhibitionRepository;
-  private final OrderRepository orderRepository;
 
   public List<TicketDTO> getAllTickets(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);

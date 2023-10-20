@@ -38,8 +38,7 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     validator.validatePainting(req);
     return ControllerExecutor.execute(validator, () -> {
-      paintingService.createPainting(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(paintingService.createPainting(req));
     }, "cannot create painting");
   }
 

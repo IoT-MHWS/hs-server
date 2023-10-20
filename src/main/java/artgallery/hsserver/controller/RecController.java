@@ -26,7 +26,7 @@ public class RecController {
     }, "cannot search artists by parameters");
   }
 
-  @GetMapping("/{artistId}/paintings")
+  @GetMapping("/artists/{artistId}/paintings")
   public ResponseEntity<?> getPaintingsByArtistId(@PathVariable Long artistId) {
     RecValidator validator = new RecValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -41,7 +41,7 @@ public class RecController {
         this.addViolation("req", "req is null");
       }
       if (req.getYearOfBirth() < 0) {
-        this.addViolation("req", "year_of_creation is not correct");
+        this.addViolation("req", "year_of_birth is not correct");
       }
       if (Arrays.stream(Style.values()).map(Enum::name).collect(Collectors.toList()).contains(req.getStyle())) {
         this.addViolation("style", "style in not correct");

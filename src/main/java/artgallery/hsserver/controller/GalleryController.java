@@ -38,8 +38,7 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
-      galleryService.createGallery(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.ok().body(galleryService.createGallery(req));
     }, "cannot create gallery");
   }
 
