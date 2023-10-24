@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import artgallery.hsserver.controller.validator.Validator;
+import org.springframework.security.core.AuthenticationException;
 
 class ControllerExecutor {
 
@@ -18,6 +19,8 @@ class ControllerExecutor {
 
       try {
         return controllerFunc.run();
+      } catch (AuthenticationException ex) {
+        throw new ApiException(HttpStatus.UNAUTHORIZED, ex.getMessage());
       } catch (DoesNotExistException ex) {
         throw new ApiException(HttpStatus.NOT_FOUND, ex.getMessage());
       } catch (DatabaseConflictException ex) {
