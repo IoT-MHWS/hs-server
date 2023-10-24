@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.UserDTO;
-import artgallery.hsserver.exception.RoleDoesNotExistException;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
@@ -19,7 +18,7 @@ public class AuthServiceTest {
   AuthService authService;
 
   @Test
-  public void addUser() throws RoleDoesNotExistException, InterruptedException {
+  public void addUser() throws Exception {
     var userDTO = new UserDTO();
     var uniqueLogin = "user";
     userDTO.setLogin(uniqueLogin);

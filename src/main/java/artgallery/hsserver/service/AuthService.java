@@ -5,6 +5,7 @@ import artgallery.hsserver.configuration.JwtService;
 import artgallery.hsserver.dto.TokenDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
+import artgallery.hsserver.exception.UserAlreadyExists;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.model.Role;
 import artgallery.hsserver.model.UserEntity;
@@ -37,7 +38,11 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
-  public void register(UserDTO req) throws RoleDoesNotExistException {
+  public void register(UserDTO req) throws RoleDoesNotExistException, UserAlreadyExists {
+    if (userRepository.existsByLogin(req.getLogin())) {
+      throw new UserAlreadyExists(req.getLogin());
+    }
+
     var userEntity = UserEntity.builder()
       .login(req.getLogin())
       .password(passwordEncoder.encode(req.getPassword()))
