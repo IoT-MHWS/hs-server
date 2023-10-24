@@ -25,8 +25,7 @@ class AuthController {
     return ControllerExecutor.execute(validator, () -> {
       authService.register(req);
       return ResponseEntity.ok().body("ok");
-    },
-        "register can't be done");
+    });
   }
 
   @PostMapping(path = "/login")
@@ -37,8 +36,7 @@ class AuthController {
     return ControllerExecutor.execute(validator, () -> {
       var tokenDTO = authService.login(req);
       return ResponseEntity.ok().body(tokenDTO);
-    },
-        "login can't be done");
+    });
 
   }
 
@@ -47,8 +45,7 @@ class AuthController {
     return ControllerExecutor.execute(null, () -> {
       var tokenDTO = authService.refreshToken(reqHeaders);
       return ResponseEntity.ok().body(tokenDTO);
-    },
-        "refresh can't be done");
+    });
   }
 
   private static class AuthValidator extends Validator {

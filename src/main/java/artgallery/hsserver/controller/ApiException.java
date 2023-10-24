@@ -18,6 +18,10 @@ public class ApiException extends Throwable {
     apiError = new ApiError(status, ex);
   }
 
+  ApiException(HttpStatus status, String message) {
+    apiError = new ApiError(status, message);
+  }
+
   ApiException(HttpStatus status, String message, Throwable ex) {
     apiError = new ApiError(status, message, ex);
   }

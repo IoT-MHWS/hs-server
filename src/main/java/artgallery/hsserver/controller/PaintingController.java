@@ -20,7 +20,7 @@ public class PaintingController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(paintingService.getAllPaintings(page, size));
-      }, "correct paintings can't be found");
+      });
   }
 
 
@@ -29,7 +29,7 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(paintingService.getPaintingById(id));
-    }, "this painting does not exist");
+    });
   }
 
 
@@ -39,7 +39,7 @@ public class PaintingController {
     validator.validatePainting(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(paintingService.createPainting(req));
-    }, "cannot create painting");
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +49,7 @@ public class PaintingController {
     return ControllerExecutor.execute(validator, () -> {
       paintingService.updatePainting(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this painting");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -58,7 +58,7 @@ public class PaintingController {
     return ControllerExecutor.execute(validator, () -> {
       paintingService.deletePainting(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete painting");
+    });
   }
 
 

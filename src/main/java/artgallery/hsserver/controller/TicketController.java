@@ -20,7 +20,7 @@ public class TicketController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(ticketService.getAllTickets(page, size));
-      }, "correct tickets can't be found");
+      });
   }
 
 
@@ -29,7 +29,7 @@ public class TicketController {
     TicketValidator validator = new TicketValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(ticketService.getTicketById(id));
-    }, "this ticket does not exist");
+    });
   }
 
 
@@ -39,7 +39,7 @@ public class TicketController {
     validator.validateTicket(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(ticketService.createTicket(req));
-    }, "cannot create ticket");
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +49,7 @@ public class TicketController {
     return ControllerExecutor.execute(validator, () -> {
       ticketService.updateTicket(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this ticket");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -59,7 +59,7 @@ public class TicketController {
     return ControllerExecutor.execute(validator, () -> {
       ticketService.deleteTicket(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete ticket");
+    });
   }
 
   private static class TicketValidator extends Validator {

@@ -31,8 +31,7 @@ public class ArtistController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(artistsPage.getTotalElements()));
         return ResponseEntity.ok().headers(headers).body(artists);
-      },
-      "correct artists can't be found");
+      });
   }
 
 
@@ -41,7 +40,7 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(artistService.getArtistById(id));
-    }, "this artist does not exist");
+    });
   }
 
 
@@ -51,7 +50,7 @@ public class ArtistController {
     validator.validateArtist(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(artistService.createArtist(req));
-    }, "cannot create artist");
+    });
   }
 
 
@@ -62,7 +61,7 @@ public class ArtistController {
     return ControllerExecutor.execute(validator, () -> {
       artistService.updateArtist(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this artist");
+    });
   }
 
 
@@ -72,7 +71,7 @@ public class ArtistController {
     return ControllerExecutor.execute(validator, () -> {
       artistService.deleteArtist(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete artist");
+    });
   }
 
 

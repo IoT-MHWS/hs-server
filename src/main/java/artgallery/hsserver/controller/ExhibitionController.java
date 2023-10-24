@@ -20,8 +20,7 @@ public class ExhibitionController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(exhibitionService.getAllExhibitions(page, size));
-      },
-      "correct exhibitions can't be found");
+      });
   }
 
 
@@ -30,7 +29,7 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(exhibitionService.getExhibitionById(id));
-    }, "this exhibition does not exist");
+    });
   }
 
 
@@ -40,7 +39,7 @@ public class ExhibitionController {
     validator.validateExhibition(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(exhibitionService.createExhibition(req));
-    }, "cannot create exhibition");
+    });
   }
 
 
@@ -51,7 +50,7 @@ public class ExhibitionController {
     return ControllerExecutor.execute(validator, () -> {
       exhibitionService.updateExhibition(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this exhibition");
+    });
   }
 
 
@@ -61,7 +60,7 @@ public class ExhibitionController {
     return ControllerExecutor.execute(validator, () -> {
       exhibitionService.deleteExhibition(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete exhibition");
+    });
   }
 
 

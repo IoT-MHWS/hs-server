@@ -20,8 +20,7 @@ public class OrderController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(orderService.getAllOrders(page, size));
-      },
-      "correct orders can't be found");
+      });
   }
 
 
@@ -30,7 +29,7 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(orderService.getOrderById(id));
-    }, "this order does not exist");
+    });
   }
 
 
@@ -40,7 +39,7 @@ public class OrderController {
     validator.validateOrder(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(orderService.createOrder(req));
-    }, "cannot create order");
+    });
   }
 
 
@@ -51,7 +50,7 @@ public class OrderController {
     return ControllerExecutor.execute(validator, () -> {
       orderService.updateOrder(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this order");
+    });
   }
 
 
@@ -61,7 +60,7 @@ public class OrderController {
     return ControllerExecutor.execute(validator, () -> {
       orderService.deleteOrder(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete order");
+    });
   }
 
 

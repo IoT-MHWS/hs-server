@@ -20,8 +20,7 @@ public class GalleryController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(galleryService.getAllGalleries(page, size));
-      },
-      "correct galleries can't be found");
+      });
   }
 
   @GetMapping("/{id}")
@@ -30,7 +29,7 @@ public class GalleryController {
     return ControllerExecutor.execute(validator, () -> {
       validator.validateGallery(galleryService.getGalleryById(id));
       return ResponseEntity.ok().body(galleryService.getGalleryById(id));
-    }, "this gallery does not exist");
+    });
   }
 
   @PostMapping
@@ -39,7 +38,7 @@ public class GalleryController {
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(galleryService.createGallery(req));
-    }, "cannot create gallery");
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +48,7 @@ public class GalleryController {
     return ControllerExecutor.execute(validator, () -> {
       galleryService.updateGallery(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update gallery");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -58,7 +57,7 @@ public class GalleryController {
     return ControllerExecutor.execute(validator, () -> {
       galleryService.deleteGallery(id);
       return ResponseEntity.ok().body("ok");
-    }, "cannot delete gallery");
+    });
   }
 
   private static class GalleryValidator extends Validator {
