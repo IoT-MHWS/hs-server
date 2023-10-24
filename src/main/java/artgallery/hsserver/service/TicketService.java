@@ -61,11 +61,9 @@ public class TicketService {
   }
 
   @Transactional
-  public void deleteTicket(long id) throws TicketDoesNotExistException {
+  public void deleteTicket(long id) {
     if (ticketRepository.existsById(id)) {
       ticketRepository.deleteById(id);
-    } else {
-      throw new TicketDoesNotExistException(id);
     }
   }
 

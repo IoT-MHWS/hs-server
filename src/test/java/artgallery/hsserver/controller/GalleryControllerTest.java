@@ -143,10 +143,7 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deleteGallery() {
-      try {
-        galleryService.deleteGallery(galleryDTO.getId());
-      } catch (GalleryDoesNotExistException | PaintingDoesNotExistException ignore) {
-      }
+      galleryService.deleteGallery(galleryDTO.getId());
     }
   }
 }

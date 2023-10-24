@@ -164,15 +164,12 @@ public class TicketControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deleteTicket() {
-      try {
-        ticketService.deleteTicket(ticketDTO.getId());
-      } catch (TicketDoesNotExistException ignore) {
-      }
+      ticketService.deleteTicket(ticketDTO.getId());
     }
   }
 
   @AfterAll
-  static void cleanup(@Autowired GalleryService galleryService, @Autowired ExhibitionService exhibitionService) throws PaintingDoesNotExistException, GalleryDoesNotExistException, ExhibitionDoesNotExistException {
+  static void cleanup(@Autowired GalleryService galleryService, @Autowired ExhibitionService exhibitionService) {
     exhibitionService.deleteExhibition(exhibitionDTO.getId());
     galleryService.deleteGallery(galleryDTO.getId());
   }

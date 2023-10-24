@@ -2,7 +2,6 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ArtistDTO;
-import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
 import jakarta.transaction.Transactional;
@@ -169,10 +168,7 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deleteArtist() {
-      try {
-        artistService.deleteArtist(artistDTO.getId());
-      } catch (ArtistDoesNotExistException ignore) {
-      }
+      artistService.deleteArtist(artistDTO.getId());
     }
   }
 }

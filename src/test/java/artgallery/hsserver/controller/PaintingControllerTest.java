@@ -5,7 +5,6 @@ import artgallery.hsserver.dto.ArtistDTO;
 import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
-import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
 import artgallery.hsserver.service.PaintingService;
@@ -158,10 +157,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deletePainting() {
-      try {
-        paintingService.deletePainting(paintingDTO.getId());
-      } catch (GalleryDoesNotExistException | PaintingDoesNotExistException ignore) {
-      }
+      paintingService.deletePainting(paintingDTO.getId());
     }
   }
 }

@@ -61,11 +61,9 @@ public class ExhibitionService {
   }
 
   @Transactional
-  public void deleteExhibition(long id) throws ExhibitionDoesNotExistException {
+  public void deleteExhibition(long id) {
     if (exhibitionRepository.existsById(id)) {
       exhibitionRepository.deleteById(id);
-    } else {
-      throw new ExhibitionDoesNotExistException(id);
     }
   }
 

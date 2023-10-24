@@ -3,7 +3,6 @@ package artgallery.hsserver.controller;
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ExhibitionDTO;
 import artgallery.hsserver.dto.GalleryDTO;
-import artgallery.hsserver.exception.ExhibitionDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
 import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.service.ExhibitionService;
@@ -159,10 +158,7 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deleteExhibition() {
-      try {
-        exhibitionService.deleteExhibition(exhibitionDTO.getId());
-      } catch (ExhibitionDoesNotExistException ignore) {
-      }
+      exhibitionService.deleteExhibition(exhibitionDTO.getId());
     }
   }
 }

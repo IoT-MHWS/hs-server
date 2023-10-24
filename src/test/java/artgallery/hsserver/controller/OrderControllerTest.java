@@ -2,7 +2,6 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.OrderDTO;
-import artgallery.hsserver.exception.OrderDoesNotExistException;
 import artgallery.hsserver.exception.TicketDoesNotExistException;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.service.OrderService;
@@ -147,10 +146,7 @@ public class OrderControllerTest extends AuthorizedControllerTest {
 
     @AfterEach
     public void deleteOrder() {
-      try {
-        orderService.deleteOrder(orderDTO.getId());
-      } catch (OrderDoesNotExistException ignore) {
-      }
+      orderService.deleteOrder(orderDTO.getId());
     }
   }
 }
