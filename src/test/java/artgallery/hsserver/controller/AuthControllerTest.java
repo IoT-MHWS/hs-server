@@ -57,7 +57,7 @@ public class AuthControllerTest {
     MockHttpServletResponse response = result.getResponse();
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals("ok", response.getContentAsString())
     );
   }

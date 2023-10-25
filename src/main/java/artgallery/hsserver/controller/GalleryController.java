@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.service.GalleryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(galleryService.createGallery(req));
+      return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.createGallery(req));
     });
   }
 

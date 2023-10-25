@@ -24,7 +24,7 @@ class AuthController {
 
     return ControllerExecutor.execute(validator, () -> {
       authService.register(req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     });
   }
 

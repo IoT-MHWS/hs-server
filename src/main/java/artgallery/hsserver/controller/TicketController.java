@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.TicketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class TicketController {
     TicketValidator validator = new TicketValidator();
     validator.validateTicket(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(ticketService.createTicket(req));
+      return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.createTicket(req));
     });
   }
 

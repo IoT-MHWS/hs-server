@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     validator.validateOrder(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(orderService.createOrder(req));
+      return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(req));
     });
   }
 

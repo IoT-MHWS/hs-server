@@ -7,6 +7,7 @@ import artgallery.hsserver.service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(artistService.createArtist(req));
+      return ResponseEntity.status(HttpStatus.CREATED).body(artistService.createArtist(req));
     });
   }
 

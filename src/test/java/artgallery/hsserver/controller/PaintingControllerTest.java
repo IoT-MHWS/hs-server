@@ -64,7 +64,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
     PaintingDTO resultDTO = objectMapper.readValue(response.getContentAsString(), PaintingDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
       () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
       () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),

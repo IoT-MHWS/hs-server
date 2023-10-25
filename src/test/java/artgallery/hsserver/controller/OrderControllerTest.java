@@ -55,7 +55,7 @@ public class OrderControllerTest extends AuthorizedControllerTest {
     OrderDTO resultDTO = objectMapper.readValue(response.getContentAsString(), OrderDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(orderDTO.getDate(), resultDTO.getDate()),
       () -> assertEquals(orderDTO.getUserLogin(), resultDTO.getUserLogin()),
       () -> assertEquals(orderDTO.getTicketsId(), resultDTO.getTicketsId())

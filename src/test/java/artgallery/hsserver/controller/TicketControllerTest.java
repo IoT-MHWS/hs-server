@@ -73,7 +73,7 @@ public class TicketControllerTest extends AuthorizedControllerTest {
     TicketDTO resultDTO = objectMapper.readValue(response.getContentAsString(), TicketDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(ticketDTO.getDescription(), resultDTO.getDescription()),
       () -> assertEquals(ticketDTO.getPrice(), resultDTO.getPrice()),
       () -> assertEquals(ticketDTO.getExhibitionId(), resultDTO.getExhibitionId())

@@ -64,7 +64,7 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
     ExhibitionDTO resultDTO = objectMapper.readValue(response.getContentAsString(), ExhibitionDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(exhibitionDTO.getName(), resultDTO.getName()),
       () -> assertEquals(exhibitionDTO.getStartDate(), resultDTO.getStartDate()),
       () -> assertEquals(exhibitionDTO.getEndDate(), resultDTO.getEndDate()),

@@ -27,7 +27,7 @@ public class UserController {
 
     return ControllerExecutor.execute(validator, () -> {
       userService.addRole(name, roleDTO.getRole());
-      return ResponseEntity.ok().body(new MessageDTO("ok"));
+      return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("ok"));
     });
   }
 

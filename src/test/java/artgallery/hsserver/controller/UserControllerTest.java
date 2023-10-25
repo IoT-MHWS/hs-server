@@ -67,7 +67,7 @@ public class UserControllerTest extends AuthorizedControllerTest {
     MessageDTO messageDTO = objectMapper.readValue(response.getContentAsString(), MessageDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals("ok", messageDTO.getMsg())
     );
 

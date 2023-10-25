@@ -54,7 +54,7 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     GalleryDTO resultDTO = objectMapper.readValue(response.getContentAsString(), GalleryDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
       () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress()),
       () -> assertEquals(galleryDTO.getPaintingsId(), resultDTO.getPaintingsId())

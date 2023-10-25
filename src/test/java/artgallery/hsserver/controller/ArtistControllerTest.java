@@ -51,7 +51,7 @@ public class ArtistControllerTest extends AuthorizedControllerTest {
     ArtistDTO resultDTO = objectMapper.readValue(response.getContentAsString(), ArtistDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(artistDTO.getName(), resultDTO.getName()),
       () -> assertEquals(artistDTO.getStyle(), resultDTO.getStyle()),
       () -> assertEquals(artistDTO.getBio(), resultDTO.getBio()),
