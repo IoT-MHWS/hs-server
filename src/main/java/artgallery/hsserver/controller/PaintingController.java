@@ -58,7 +58,7 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
       paintingService.deletePainting(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 

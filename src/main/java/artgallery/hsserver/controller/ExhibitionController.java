@@ -60,7 +60,7 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {
       exhibitionService.deleteExhibition(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 

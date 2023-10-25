@@ -150,8 +150,8 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       MockHttpServletResponse response = result.getResponse();
 
       assertAll(
-        () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(204, response.getStatus()),
+        () -> assertEquals(0, response.getContentLength())
       );
     }
 

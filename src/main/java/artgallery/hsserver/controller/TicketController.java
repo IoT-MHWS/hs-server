@@ -59,7 +59,7 @@ public class TicketController {
 
     return ControllerExecutor.execute(validator, () -> {
       ticketService.deleteTicket(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 

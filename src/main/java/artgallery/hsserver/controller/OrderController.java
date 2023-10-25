@@ -60,7 +60,7 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
       orderService.deleteOrder(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 

@@ -38,7 +38,7 @@ public class UserController {
 
     return ControllerExecutor.execute(validator, () -> {
       userService.removeRole(name, roleDTO.getRole());
-      return ResponseEntity.ok().body(new MessageDTO("ok"));
+      return ResponseEntity.noContent().build();
     });
   }
 

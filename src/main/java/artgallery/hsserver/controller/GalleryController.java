@@ -57,7 +57,7 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
       galleryService.deleteGallery(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 

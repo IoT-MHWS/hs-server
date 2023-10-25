@@ -90,11 +90,9 @@ public class UserControllerTest extends AuthorizedControllerTest {
       .andReturn();
     MockHttpServletResponse response = result.getResponse();
 
-    MessageDTO messageDTO = objectMapper.readValue(response.getContentAsString(), MessageDTO.class);
-
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
-      () -> assertEquals("ok", messageDTO.getMsg())
+      () -> assertEquals(204, response.getStatus()),
+      () -> assertEquals(0, response.getContentLength())
     );
   }
 

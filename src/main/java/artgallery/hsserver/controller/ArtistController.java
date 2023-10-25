@@ -71,7 +71,7 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {
       artistService.deleteArtist(id);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.noContent().build();
     });
   }
 
