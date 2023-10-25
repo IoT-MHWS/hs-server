@@ -73,7 +73,7 @@ public class TicketControllerTest extends AuthorizedControllerTest {
     TicketDTO resultDTO = objectMapper.readValue(response.getContentAsString(), TicketDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(ticketDTO.getDescription(), resultDTO.getDescription()),
       () -> assertEquals(ticketDTO.getPrice(), resultDTO.getPrice()),
       () -> assertEquals(ticketDTO.getExhibitionId(), resultDTO.getExhibitionId())
@@ -157,22 +157,19 @@ public class TicketControllerTest extends AuthorizedControllerTest {
       MockHttpServletResponse response = result.getResponse();
 
       assertAll(
-        () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(204, response.getStatus()),
+        () -> assertEquals(0, response.getContentLength())
       );
     }
 
     @AfterEach
     public void deleteTicket() {
-      try {
-        ticketService.deleteTicket(ticketDTO.getId());
-      } catch (TicketDoesNotExistException ignore) {
-      }
+      ticketService.deleteTicket(ticketDTO.getId());
     }
   }
 
   @AfterAll
-  static void cleanup(@Autowired GalleryService galleryService, @Autowired ExhibitionService exhibitionService) throws PaintingDoesNotExistException, GalleryDoesNotExistException, ExhibitionDoesNotExistException {
+  static void cleanup(@Autowired GalleryService galleryService, @Autowired ExhibitionService exhibitionService) {
     exhibitionService.deleteExhibition(exhibitionDTO.getId());
     galleryService.deleteGallery(galleryDTO.getId());
   }

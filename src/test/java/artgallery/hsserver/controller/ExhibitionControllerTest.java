@@ -3,7 +3,6 @@ package artgallery.hsserver.controller;
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ExhibitionDTO;
 import artgallery.hsserver.dto.GalleryDTO;
-import artgallery.hsserver.exception.ExhibitionDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
 import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.service.ExhibitionService;
@@ -65,7 +64,7 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
     ExhibitionDTO resultDTO = objectMapper.readValue(response.getContentAsString(), ExhibitionDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(exhibitionDTO.getName(), resultDTO.getName()),
       () -> assertEquals(exhibitionDTO.getStartDate(), resultDTO.getStartDate()),
       () -> assertEquals(exhibitionDTO.getEndDate(), resultDTO.getEndDate()),
@@ -152,17 +151,14 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
       MockHttpServletResponse response = result.getResponse();
 
       assertAll(
-        () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(204, response.getStatus()),
+        () -> assertEquals(0, response.getContentLength())
       );
     }
 
     @AfterEach
     public void deleteExhibition() {
-      try {
-        exhibitionService.deleteExhibition(exhibitionDTO.getId());
-      } catch (ExhibitionDoesNotExistException ignore) {
-      }
+      exhibitionService.deleteExhibition(exhibitionDTO.getId());
     }
   }
 }

@@ -5,7 +5,6 @@ import artgallery.hsserver.dto.ArtistDTO;
 import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
-import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
 import artgallery.hsserver.service.PaintingService;
@@ -65,7 +64,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
     PaintingDTO resultDTO = objectMapper.readValue(response.getContentAsString(), PaintingDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
       () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
       () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),
@@ -151,17 +150,14 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       MockHttpServletResponse response = result.getResponse();
 
       assertAll(
-        () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(204, response.getStatus()),
+        () -> assertEquals(0, response.getContentLength())
       );
     }
 
     @AfterEach
     public void deletePainting() {
-      try {
-        paintingService.deletePainting(paintingDTO.getId());
-      } catch (GalleryDoesNotExistException | PaintingDoesNotExistException ignore) {
-      }
+      paintingService.deletePainting(paintingDTO.getId());
     }
   }
 }

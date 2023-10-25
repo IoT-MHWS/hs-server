@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.ExhibitionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,7 @@ public class ExhibitionController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(exhibitionService.getAllExhibitions(page, size));
-      },
-      "correct exhibitions can't be found");
+      });
   }
 
 
@@ -30,7 +30,7 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(exhibitionService.getExhibitionById(id));
-    }, "this exhibition does not exist");
+    });
   }
 
 
@@ -39,8 +39,8 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     validator.validateExhibition(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(exhibitionService.createExhibition(req));
-    }, "cannot create exhibition");
+      return ResponseEntity.status(HttpStatus.CREATED).body(exhibitionService.createExhibition(req));
+    });
   }
 
 
@@ -51,7 +51,7 @@ public class ExhibitionController {
     return ControllerExecutor.execute(validator, () -> {
       exhibitionService.updateExhibition(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this exhibition");
+    });
   }
 
 
@@ -60,8 +60,8 @@ public class ExhibitionController {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {
       exhibitionService.deleteExhibition(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete exhibition");
+      return ResponseEntity.noContent().build();
+    });
   }
 
 

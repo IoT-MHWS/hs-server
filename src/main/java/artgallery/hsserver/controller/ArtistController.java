@@ -7,6 +7,7 @@ import artgallery.hsserver.service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,7 @@ public class ArtistController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", String.valueOf(artistsPage.getTotalElements()));
         return ResponseEntity.ok().headers(headers).body(artists);
-      },
-      "correct artists can't be found");
+      });
   }
 
 
@@ -41,7 +41,7 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(artistService.getArtistById(id));
-    }, "this artist does not exist");
+    });
   }
 
 
@@ -50,8 +50,8 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(artistService.createArtist(req));
-    }, "cannot create artist");
+      return ResponseEntity.status(HttpStatus.CREATED).body(artistService.createArtist(req));
+    });
   }
 
 
@@ -62,7 +62,7 @@ public class ArtistController {
     return ControllerExecutor.execute(validator, () -> {
       artistService.updateArtist(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this artist");
+    });
   }
 
 
@@ -71,8 +71,8 @@ public class ArtistController {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {
       artistService.deleteArtist(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete artist");
+      return ResponseEntity.noContent().build();
+    });
   }
 
 

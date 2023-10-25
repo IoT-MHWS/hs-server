@@ -54,7 +54,7 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     GalleryDTO resultDTO = objectMapper.readValue(response.getContentAsString(), GalleryDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
       () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress()),
       () -> assertEquals(galleryDTO.getPaintingsId(), resultDTO.getPaintingsId())
@@ -136,17 +136,14 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
       MockHttpServletResponse response = result.getResponse();
 
       assertAll(
-        () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(204, response.getStatus()),
+        () -> assertEquals(0, response.getContentLength())
       );
     }
 
     @AfterEach
     public void deleteGallery() {
-      try {
-        galleryService.deleteGallery(galleryDTO.getId());
-      } catch (GalleryDoesNotExistException | PaintingDoesNotExistException ignore) {
-      }
+      galleryService.deleteGallery(galleryDTO.getId());
     }
   }
 }

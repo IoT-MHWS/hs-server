@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.PaintingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class PaintingController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(paintingService.getAllPaintings(page, size));
-      }, "correct paintings can't be found");
+      });
   }
 
 
@@ -29,7 +30,7 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(paintingService.getPaintingById(id));
-    }, "this painting does not exist");
+    });
   }
 
 
@@ -38,8 +39,8 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     validator.validatePainting(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(paintingService.createPainting(req));
-    }, "cannot create painting");
+      return ResponseEntity.status(HttpStatus.CREATED).body(paintingService.createPainting(req));
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +50,7 @@ public class PaintingController {
     return ControllerExecutor.execute(validator, () -> {
       paintingService.updatePainting(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this painting");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -57,8 +58,8 @@ public class PaintingController {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
       paintingService.deletePainting(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete painting");
+      return ResponseEntity.noContent().build();
+    });
   }
 
 

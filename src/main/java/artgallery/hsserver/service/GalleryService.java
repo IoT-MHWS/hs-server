@@ -91,22 +91,12 @@ public class GalleryService {
 
 
   @Transactional
-  public void deleteGallery(long id) throws GalleryDoesNotExistException, PaintingDoesNotExistException {
+  public void deleteGallery(long id) {
     if (galleryPaintingRepository.existsByGalleryId(id)) {
-      try {
-        galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(id);
-      } catch (Exception e) {
-        throw new PaintingDoesNotExistException(id);
-      }
+      galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(id);
     }
     if (galleryRepository.existsById(id)) {
-      try {
-        galleryRepository.deleteById(id);
-      } catch (Exception e) {
-        throw new GalleryDoesNotExistException(id);
-      }
-    } else {
-      throw new GalleryDoesNotExistException(id);
+      galleryRepository.deleteById(id);
     }
   }
 

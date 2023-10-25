@@ -77,11 +77,9 @@ public class OrderService {
   }
 
   @Transactional
-  public void deleteOrder(long id) throws OrderDoesNotExistException {
+  public void deleteOrder(long id) {
     if (orderRepository.existsById(id)) {
       orderRepository.deleteById(id);
-    } else {
-      throw new OrderDoesNotExistException(id);
     }
   }
 

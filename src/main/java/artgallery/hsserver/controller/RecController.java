@@ -23,7 +23,7 @@ public class RecController {
     validator.validateRec(req);
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(recService.getFilteredArtists(req));
-    }, "cannot search artists by parameters");
+    });
   }
 
   @GetMapping("/artists/{artistId}/paintings")
@@ -31,7 +31,7 @@ public class RecController {
     RecValidator validator = new RecValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(recService.getPaintingsByArtistId(artistId));
-    }, "cannot find paintings by their artists");
+    });
   }
 
   private static class RecValidator extends Validator {

@@ -27,8 +27,8 @@ public class UserController {
 
     return ControllerExecutor.execute(validator, () -> {
       userService.addRole(name, roleDTO.getRole());
-      return ResponseEntity.ok().body(new MessageDTO("ok"));
-    }, "add failed");
+      return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("ok"));
+    });
   }
 
   @PostMapping(path = "/{login}/roles/remove")
@@ -38,8 +38,8 @@ public class UserController {
 
     return ControllerExecutor.execute(validator, () -> {
       userService.removeRole(name, roleDTO.getRole());
-      return ResponseEntity.ok().body(new MessageDTO("ok"));
-    }, "remove failed");
+      return ResponseEntity.noContent().build();
+    });
   }
 
   @GetMapping(path = "/{login}/roles")
@@ -48,7 +48,7 @@ public class UserController {
 
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(userService.getRoles(name));
-    }, "get failed");
+    });
   }
 
   private static class UserValidator extends Validator {

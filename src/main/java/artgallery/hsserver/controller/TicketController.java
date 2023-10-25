@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.TicketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class TicketController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(ticketService.getAllTickets(page, size));
-      }, "correct tickets can't be found");
+      });
   }
 
 
@@ -29,7 +30,7 @@ public class TicketController {
     TicketValidator validator = new TicketValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(ticketService.getTicketById(id));
-    }, "this ticket does not exist");
+    });
   }
 
 
@@ -38,8 +39,8 @@ public class TicketController {
     TicketValidator validator = new TicketValidator();
     validator.validateTicket(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(ticketService.createTicket(req));
-    }, "cannot create ticket");
+      return ResponseEntity.status(HttpStatus.CREATED).body(ticketService.createTicket(req));
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +50,7 @@ public class TicketController {
     return ControllerExecutor.execute(validator, () -> {
       ticketService.updateTicket(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this ticket");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -58,8 +59,8 @@ public class TicketController {
 
     return ControllerExecutor.execute(validator, () -> {
       ticketService.deleteTicket(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete ticket");
+      return ResponseEntity.noContent().build();
+    });
   }
 
   private static class TicketValidator extends Validator {

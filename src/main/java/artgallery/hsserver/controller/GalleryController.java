@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.service.GalleryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,7 @@ public class GalleryController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(galleryService.getAllGalleries(page, size));
-      },
-      "correct galleries can't be found");
+      });
   }
 
   @GetMapping("/{id}")
@@ -30,7 +30,7 @@ public class GalleryController {
     return ControllerExecutor.execute(validator, () -> {
       validator.validateGallery(galleryService.getGalleryById(id));
       return ResponseEntity.ok().body(galleryService.getGalleryById(id));
-    }, "this gallery does not exist");
+    });
   }
 
   @PostMapping
@@ -38,8 +38,8 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(galleryService.createGallery(req));
-    }, "cannot create gallery");
+      return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.createGallery(req));
+    });
   }
 
   @PutMapping("/{id}")
@@ -49,7 +49,7 @@ public class GalleryController {
     return ControllerExecutor.execute(validator, () -> {
       galleryService.updateGallery(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update gallery");
+    });
   }
 
   @DeleteMapping("/{id}")
@@ -57,8 +57,8 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
       galleryService.deleteGallery(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete gallery");
+      return ResponseEntity.noContent().build();
+    });
   }
 
   private static class GalleryValidator extends Validator {

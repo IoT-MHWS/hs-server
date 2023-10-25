@@ -98,17 +98,12 @@ public class PaintingService {
   }
 
   @Transactional
-  public void deletePainting(long id) throws PaintingDoesNotExistException, GalleryDoesNotExistException {
+  public void deletePainting(long id) {
+    if (galleryPaintingRepository.existsByPaintingId(id)) {
+      galleryPaintingRepository.deleteGalleryPaintingEntityByPaintingId(id);
+    }
     if (paintingRepository.existsById(id)) {
-      try {
-        galleryPaintingRepository.deleteGalleryPaintingEntityByPaintingId(id);
-        paintingRepository.deleteById(id);
-      } catch (Exception e) {
-
-        throw new GalleryDoesNotExistException(id);
-      }
-    } else {
-      throw new PaintingDoesNotExistException(id);
+      paintingRepository.deleteById(id);
     }
   }
 

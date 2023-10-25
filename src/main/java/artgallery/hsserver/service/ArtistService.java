@@ -60,11 +60,9 @@ public class ArtistService {
   }
 
   @Transactional
-  public void deleteArtist(long id) throws ArtistDoesNotExistException {
+  public void deleteArtist(long id) {
     if (artistRepository.existsById(id)) {
       artistRepository.deleteById(id);
-    } else {
-      throw new ArtistDoesNotExistException(id);
     }
   }
 

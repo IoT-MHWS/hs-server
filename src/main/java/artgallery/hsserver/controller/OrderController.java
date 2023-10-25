@@ -4,6 +4,7 @@ import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,7 @@ public class OrderController {
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
         return ResponseEntity.ok().body(orderService.getAllOrders(page, size));
-      },
-      "correct orders can't be found");
+      });
   }
 
 
@@ -30,7 +30,7 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
       return ResponseEntity.ok().body(orderService.getOrderById(id));
-    }, "this order does not exist");
+    });
   }
 
 
@@ -39,8 +39,8 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     validator.validateOrder(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(orderService.createOrder(req));
-    }, "cannot create order");
+      return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(req));
+    });
   }
 
 
@@ -51,7 +51,7 @@ public class OrderController {
     return ControllerExecutor.execute(validator, () -> {
       orderService.updateOrder(id, req);
       return ResponseEntity.ok().body("ok");
-    }, "cannot update this order");
+    });
   }
 
 
@@ -60,8 +60,8 @@ public class OrderController {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
       orderService.deleteOrder(id);
-      return ResponseEntity.ok().body("ok");
-    }, "cannot delete order");
+      return ResponseEntity.noContent().build();
+    });
   }
 
 

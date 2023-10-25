@@ -6,7 +6,6 @@ import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.dto.RecDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
-import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.ArtistService;
 import artgallery.hsserver.service.PaintingService;
@@ -111,7 +110,7 @@ public class RecControllerTest extends AuthorizedControllerTest {
   }
 
   @AfterAll
-  static void cleanup(@Autowired ArtistService artistService, @Autowired PaintingService paintingService) throws ArtistDoesNotExistException, GalleryDoesNotExistException, PaintingDoesNotExistException {
+  static void cleanup(@Autowired ArtistService artistService, @Autowired PaintingService paintingService) {
     paintingService.deletePainting(paintingDTO.getId());
     artistService.deleteArtist(artistDTO.getId());
   }

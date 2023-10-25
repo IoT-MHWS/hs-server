@@ -5,7 +5,7 @@ import artgallery.hsserver.model.Role;
 /**
  * RoleAlreadyExists
  */
-public class UserRoleAlreadyExists extends Exception {
+public class UserRoleAlreadyExists extends DatabaseConflictException {
   public UserRoleAlreadyExists(String login, Role role) {
     super(String.format(("role %s for user %s already exists"), role.name(), login));
   }

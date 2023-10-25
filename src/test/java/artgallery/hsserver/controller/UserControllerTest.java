@@ -5,6 +5,7 @@ import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.RoleDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
+import artgallery.hsserver.exception.UserAlreadyExists;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.exception.UserRoleAlreadyExists;
 import artgallery.hsserver.model.Role;
@@ -37,7 +38,7 @@ public class UserControllerTest extends AuthorizedControllerTest {
   static private UserDTO userDTO;
 
   @BeforeAll
-  static void setup(@Autowired UserService userService, @Autowired AuthService authService) throws RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
+  static void setup(@Autowired UserService userService, @Autowired AuthService authService) throws UserAlreadyExists, RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
     userService.addRole(username, Role.ADMIN);
 
     userDTO = new UserDTO();
@@ -66,7 +67,7 @@ public class UserControllerTest extends AuthorizedControllerTest {
     MessageDTO messageDTO = objectMapper.readValue(response.getContentAsString(), MessageDTO.class);
 
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
+      () -> assertEquals(201, response.getStatus()),
       () -> assertEquals("ok", messageDTO.getMsg())
     );
 
@@ -89,11 +90,9 @@ public class UserControllerTest extends AuthorizedControllerTest {
       .andReturn();
     MockHttpServletResponse response = result.getResponse();
 
-    MessageDTO messageDTO = objectMapper.readValue(response.getContentAsString(), MessageDTO.class);
-
     assertAll(
-      () -> assertEquals(200, response.getStatus()),
-      () -> assertEquals("ok", messageDTO.getMsg())
+      () -> assertEquals(204, response.getStatus()),
+      () -> assertEquals(0, response.getContentLength())
     );
   }
 

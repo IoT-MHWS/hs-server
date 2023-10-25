@@ -1,5 +1,6 @@
 package artgallery.hsserver.service;
 
+import artgallery.hsserver.exception.UserAlreadyExists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class UserServiceTest {
   private UserService userService;
 
   @Test
-  public void addUserRole() throws RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
+  public void addUserRole() throws Exception {
     var userDTO = new UserDTO();
     var uniqueLogin = "user";
     var password = "testpwd";
