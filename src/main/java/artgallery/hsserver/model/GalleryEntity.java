@@ -31,7 +31,7 @@ public class GalleryEntity {
   @ToString.Exclude
   private List<ExhibitionEntity> exhibitions;
 
-  @OneToMany(mappedBy = "gallery")
-  @ToString.Exclude
-  private List<GalleryPaintingEntity> galleryPaintings;
+//  @OneToMany(mappedBy = "gallery")
+//  @ToString.Exclude
+//  private List<GalleryPaintingEntity> galleryPaintings;
 }

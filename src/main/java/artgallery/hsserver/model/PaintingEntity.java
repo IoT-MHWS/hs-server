@@ -32,8 +32,8 @@ public class PaintingEntity {
   @JoinColumn(name = "artist_id", referencedColumnName = "id", nullable = false)
   private ArtistEntity artistEntity;
 
-  @OneToMany(mappedBy = "painting")
-  @ToString.Exclude
-  private List<GalleryPaintingEntity> galleryPaintings;
+//  @OneToMany(mappedBy = "painting")
+//  @ToString.Exclude
+//  private List<GalleryPaintingEntity> galleryPaintings;
 
 }
