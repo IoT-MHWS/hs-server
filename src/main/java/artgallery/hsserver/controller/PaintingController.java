@@ -62,6 +62,41 @@ public class PaintingController {
     });
   }
 
+  @PostMapping("/{paintingId}/galleries")
+  public ResponseEntity<?> createLink(@PathVariable long paintingId, @RequestBody GalleryPaintingDTO linkDto) {
+    PaintingValidator validator = new PaintingValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      paintingService.createLinkPaintingToGallery(paintingId, linkDto);
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    });
+  }
+
+  @GetMapping("/{paintingId}/galleries")
+  public ResponseEntity<?> getLinksToGalleries(@PathVariable long paintingId) {
+    PaintingValidator validator = new PaintingValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId));
+    });
+  }
+
+  @PutMapping("/{galleryId}/paintings/{paintingId}")
+  public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
+                                              @RequestBody GalleryPaintingDTO linkDto) {
+    PaintingValidator validator = new PaintingValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.status(HttpStatus.CREATED)
+        .body(paintingService.createOrUpdateLinkPaintingToGallery(galleryId, paintingId, linkDto));
+    });
+  }
+
+  @DeleteMapping("/{galleryId}/paintings/{paintingId}")
+  public ResponseEntity<?> deleteLink(@PathVariable long galleryId, @PathVariable long paintingId) {
+    PaintingValidator validator = new PaintingValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      paintingService.deleteLink(galleryId, paintingId);
+      return ResponseEntity.noContent().build();
+    });
+  }
 
   private static class PaintingValidator extends Validator {
     public PaintingValidator validateSize(int size){
