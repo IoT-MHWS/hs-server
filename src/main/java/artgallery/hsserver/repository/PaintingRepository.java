@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface PaintingRepository extends JpaRepository<PaintingEntity, Long> {
   List<PaintingEntity> findByArtistEntityId(Long artistId);
-
 }
