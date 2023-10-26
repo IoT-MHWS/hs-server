@@ -1,6 +1,7 @@
 package artgallery.hsserver.controller;
 
 import artgallery.hsserver.controller.validator.Validator;
+import artgallery.hsserver.dto.GalleryPaintingDTO;
 import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.service.GalleryService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,12 @@ public class GalleryController {
 
   @GetMapping("/")
   public ResponseEntity<?> getAllGalleries(@RequestParam(value = "page", defaultValue = "0") int page,
-                                          @RequestParam(value = "size", defaultValue = "10") int size) {
+                                           @RequestParam(value = "size", defaultValue = "10") int size) {
     GalleryValidator validator = new GalleryValidator();
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> {
-        return ResponseEntity.ok().body(galleryService.getAllGalleries(page, size));
-      });
+      return ResponseEntity.ok().body(galleryService.getAllGalleries(page, size));
+    });
   }
 
   @GetMapping("/{id}")
@@ -47,8 +48,7 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
-      galleryService.updateGallery(id, req);
-      return ResponseEntity.ok().body("ok");
+      return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.updateGallery(id, req));
     });
   }
 
@@ -57,6 +57,42 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
       galleryService.deleteGallery(id);
+      return ResponseEntity.noContent().build();
+    });
+  }
+
+  @PostMapping("/{galleryId}/paintings")
+  public ResponseEntity<?> createLink(@PathVariable long galleryId, @RequestBody GalleryPaintingDTO linkDto) {
+    GalleryValidator validator = new GalleryValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      galleryService.createLinkGalleryToPainting(galleryId, linkDto);
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    });
+  }
+
+  @GetMapping("/{galleryId}/paintings")
+  public ResponseEntity<?> getLinksToPaintings(@PathVariable long galleryId) {
+    GalleryValidator validator = new GalleryValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.ok().body(galleryService.getLinksGalleryToPainting(galleryId));
+    });
+  }
+
+  @PutMapping("/{galleryId}/paintings/{paintingId}")
+  public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
+                                              @RequestBody GalleryPaintingDTO linkDto) {
+    GalleryValidator validator = new GalleryValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.status(HttpStatus.CREATED)
+        .body(galleryService.createOrUpdateLinkGalleryToPainting(galleryId, paintingId, linkDto));
+    });
+  }
+
+  @DeleteMapping("/{galleryId}/paintings/{paintingId}")
+  public ResponseEntity<?> deleteLink(@PathVariable long galleryId, @PathVariable long paintingId) {
+    GalleryValidator validator = new GalleryValidator();
+    return ControllerExecutor.execute(validator, () -> {
+      galleryService.deleteLink(galleryId, paintingId);
       return ResponseEntity.noContent().build();
     });
   }

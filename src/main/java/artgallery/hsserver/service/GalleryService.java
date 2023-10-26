@@ -1,7 +1,8 @@
 package artgallery.hsserver.service;
 
-import artgallery.hsserver.dto.GalleryDTO;
+import artgallery.hsserver.dto.*;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
+import artgallery.hsserver.exception.LinkAlreadyExistsException;
 import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.model.GalleryEntity;
 import artgallery.hsserver.model.GalleryPaintingEntity;
@@ -44,46 +45,20 @@ public class GalleryService {
   }
 
   @Transactional
-  public GalleryDTO createGallery(GalleryDTO galleryDto) throws PaintingDoesNotExistException {
-    List<GalleryPaintingEntity> galleryPaintingEntities = takeGalleryPaintings(galleryDto);
-    GalleryEntity gallery = mapToGalleryEntity(galleryDto, galleryPaintingEntities);
+  public GalleryDTO createGallery(GalleryDTO galleryDto) {
+    GalleryEntity gallery = mapToGalleryEntity(galleryDto);
     galleryRepository.save(gallery);
-
-    for (Long paintingId : galleryDto.getPaintingsId()) {
-      PaintingEntity painting = paintingRepository.findById(paintingId)
-        .orElseThrow(() -> new PaintingDoesNotExistException(paintingId));
-
-      GalleryPaintingEntity galleryPainting = new GalleryPaintingEntity();
-      galleryPainting.setGallery(gallery);
-      galleryPainting.setPainting(painting);
-      galleryPainting.setDescription("done from Gallery");
-
-      galleryPaintingRepository.save(galleryPainting);
-    }
-
     return mapToGalleryDto(gallery);
   }
 
   @Transactional
-  public GalleryDTO updateGallery(long id, GalleryDTO galleryDto) throws GalleryDoesNotExistException, PaintingDoesNotExistException {
+  public GalleryDTO updateGallery(long id, GalleryDTO galleryDto) throws GalleryDoesNotExistException {
     Optional<GalleryEntity> optionalGallery = galleryRepository.findById(id);
     if (optionalGallery.isPresent()) {
       GalleryEntity existingGallery = optionalGallery.get();
       existingGallery.setName(galleryDto.getName());
       existingGallery.setAddress(galleryDto.getAddress());
-      galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryId(id);
       GalleryEntity updatedGallery = galleryRepository.save(existingGallery);
-      for (Long paintingId : galleryDto.getPaintingsId()) {
-        PaintingEntity painting = paintingRepository.findById(paintingId)
-          .orElseThrow(() -> new PaintingDoesNotExistException(paintingId));
-
-        GalleryPaintingEntity galleryPainting = new GalleryPaintingEntity();
-        galleryPainting.setPainting(painting);
-        galleryPainting.setGallery(existingGallery);
-        galleryPainting.setDescription("done from Gallery");
-
-        galleryPaintingRepository.save(galleryPainting);
-      }
       return mapToGalleryDto(updatedGallery);
     }
     throw new GalleryDoesNotExistException(id);
@@ -100,11 +75,73 @@ public class GalleryService {
     }
   }
 
-  private GalleryDTO mapToGalleryDto(GalleryEntity gallery) {
-   List<Long> paintIds = gallery.getGalleryPaintings().stream()
-      .map(GalleryPaintingEntity::getId)
+  public List<PaintingExtraDTO> getLinksGalleryToPainting(long galleryId) throws GalleryDoesNotExistException {
+    galleryRepository.findById(galleryId).orElseThrow(() -> new GalleryDoesNotExistException(galleryId));
+    List<GalleryPaintingEntity> links = galleryPaintingRepository.findByGalleryId(galleryId);
+    List<PaintingEntity> paintings = links.stream()
+      .map(GalleryPaintingEntity::getPainting)
       .collect(Collectors.toList());
-    return new GalleryDTO(gallery.getId(), gallery.getName(), gallery.getAddress(), paintIds);
+    List<Long> paintingIds = paintings.stream()
+      .map(PaintingEntity::getId)
+      .collect(Collectors.toList());
+    List<PaintingEntity> paintingList = paintingRepository.findAllById(paintingIds);
+    List<PaintingExtraDTO> paintingExtraList = paintingList.stream()
+      .map(painting -> {
+        PaintingExtraDTO dto = new PaintingExtraDTO();
+        dto.setId(painting.getId());
+        dto.setName(painting.getName());
+        dto.setYearOfCreation(painting.getYearOfCreation());
+        dto.setArtistId(painting.getArtistEntity().getId());
+        // move the reference to repo later
+        Optional<GalleryPaintingEntity> gp = galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, painting.getId());
+        dto.setDescription(gp.get().getDescription());
+        return dto;
+      })
+      .collect(Collectors.toList());
+    return paintingExtraList;
+  }
+
+  public GalleryPaintingDTO createLinkGalleryToPainting(long galleryId, GalleryPaintingDTO linkDto)
+    throws GalleryDoesNotExistException, PaintingDoesNotExistException, LinkAlreadyExistsException {
+    GalleryEntity gallery = galleryRepository.findById(galleryId)
+      .orElseThrow(() -> new GalleryDoesNotExistException(galleryId));
+    PaintingEntity painting = paintingRepository.findById(linkDto.getPaintingId())
+      .orElseThrow(() -> new PaintingDoesNotExistException(linkDto.getPaintingId()));
+    if (galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, linkDto.getPaintingId())) {
+      throw new LinkAlreadyExistsException(galleryId, linkDto.getPaintingId());
+    }
+    GalleryPaintingEntity link = new GalleryPaintingEntity();
+    link.setGallery(gallery);
+    link.setPainting(painting);
+    link.setDescription(linkDto.getDescription());
+    galleryPaintingRepository.save(link);
+    return mapToGallery2PaintingDto(link);
+  }
+
+  public GalleryPaintingDTO createOrUpdateLinkGalleryToPainting(long galleryId, long paintingId, GalleryPaintingDTO linkDto)
+    throws GalleryDoesNotExistException, PaintingDoesNotExistException {
+    GalleryEntity gallery = galleryRepository.findById(galleryId)
+      .orElseThrow(() -> new GalleryDoesNotExistException(galleryId));
+    PaintingEntity painting = paintingRepository.findById(paintingId)
+      .orElseThrow(() -> new PaintingDoesNotExistException(linkDto.getPaintingId()));
+    GalleryPaintingEntity link = galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, paintingId)
+      .orElse(new GalleryPaintingEntity());
+    link.setGallery(gallery);
+    link.setPainting(painting);
+    link.setDescription(linkDto.getDescription());
+    galleryPaintingRepository.save(link);
+    return mapToGallery2PaintingDto(link);
+  }
+
+  @Transactional
+  public void deleteLink(long galleryId, long paintingId) {
+    if (galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, paintingId)) {
+      galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryIdAndPaintingId(galleryId, paintingId);
+    }
+  }
+
+  private GalleryDTO mapToGalleryDto(GalleryEntity gallery) {
+    return new GalleryDTO(gallery.getId(), gallery.getName(), gallery.getAddress());
   }
 
   private List<GalleryDTO> mapToGalleryDtoList(List<GalleryEntity> galleries) {
@@ -112,17 +149,15 @@ public class GalleryService {
       .collect(Collectors.toList());
   }
 
-  private List<GalleryPaintingEntity> takeGalleryPaintings(GalleryDTO galleryDto){
-    List<Long> gpIds = galleryDto.getPaintingsId();
-    List<GalleryPaintingEntity> galleryPaintingEntities = galleryPaintingRepository.findAllById(gpIds);
-    return galleryPaintingEntities;
-  }
 
-  private GalleryEntity mapToGalleryEntity(GalleryDTO galleryDto, List<GalleryPaintingEntity> gpList) {
+  private GalleryEntity mapToGalleryEntity(GalleryDTO galleryDto) {
     GalleryEntity gallery = new GalleryEntity();
     gallery.setName(galleryDto.getName());
     gallery.setAddress(galleryDto.getAddress());
-    gallery.setGalleryPaintings(gpList);
     return gallery;
+  }
+
+  private GalleryPaintingDTO mapToGallery2PaintingDto(GalleryPaintingEntity link) {
+    return new GalleryPaintingDTO(link.getId(), link.getGallery().getId(), link.getPainting().getId(), link.getDescription());
   }
 }
