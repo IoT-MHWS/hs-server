@@ -1,0 +1,15 @@
+package artgallery.hsserver.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class GalleryDescriptionDTO {
+  private long paintingId;
+  private String description;
+}
