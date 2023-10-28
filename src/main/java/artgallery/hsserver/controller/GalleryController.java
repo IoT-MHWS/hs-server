@@ -1,7 +1,8 @@
 package artgallery.hsserver.controller;
 
 import artgallery.hsserver.controller.validator.Validator;
-import artgallery.hsserver.dto.GalleryPaintingDTO;
+import artgallery.hsserver.dto.DescriptionDTO;
+import artgallery.hsserver.dto.GalleryDescriptionDTO;
 import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.service.GalleryService;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class GalleryController {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.status(HttpStatus.CREATED).body(galleryService.updateGallery(id, req));
+      return ResponseEntity.status(HttpStatus.OK).body(galleryService.updateGallery(id, req));
     });
   }
 
@@ -62,7 +63,7 @@ public class GalleryController {
   }
 
   @PostMapping("/{galleryId}/paintings")
-  public ResponseEntity<?> createLink(@PathVariable long galleryId, @RequestBody GalleryPaintingDTO linkDto) {
+  public ResponseEntity<?> createLink(@PathVariable long galleryId, @RequestBody GalleryDescriptionDTO linkDto) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
       galleryService.createLinkGalleryToPainting(galleryId, linkDto);
@@ -80,11 +81,12 @@ public class GalleryController {
 
   @PutMapping("/{galleryId}/paintings/{paintingId}")
   public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
-                                              @RequestBody GalleryPaintingDTO linkDto) {
+                                              @RequestBody DescriptionDTO linkDto) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.status(HttpStatus.CREATED)
-        .body(galleryService.createOrUpdateLinkGalleryToPainting(galleryId, paintingId, linkDto));
+      boolean isNewLink = (galleryService.getLinkByGalleryIdAndPaintingId(galleryId, paintingId).isEmpty());
+      return ResponseEntity.status(isNewLink ? HttpStatus.CREATED : HttpStatus.OK)
+        .body(galleryService.createOrUpdateLinkGalleryToPainting(galleryId, paintingId, linkDto, isNewLink));
     });
   }
 

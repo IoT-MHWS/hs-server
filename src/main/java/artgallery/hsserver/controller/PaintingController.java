@@ -63,7 +63,7 @@ public class PaintingController {
   }
 
   @PostMapping("/{paintingId}/galleries")
-  public ResponseEntity<?> createLink(@PathVariable long paintingId, @RequestBody GalleryPaintingDTO linkDto) {
+  public ResponseEntity<?> createLink(@PathVariable long paintingId, @RequestBody PaintingDescriptionDTO linkDto) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
       paintingService.createLinkPaintingToGallery(paintingId, linkDto);
@@ -81,11 +81,12 @@ public class PaintingController {
 
   @PutMapping("/{galleryId}/paintings/{paintingId}")
   public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
-                                              @RequestBody GalleryPaintingDTO linkDto) {
+                                              @RequestBody DescriptionDTO linkDto) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.status(HttpStatus.CREATED)
-        .body(paintingService.createOrUpdateLinkPaintingToGallery(galleryId, paintingId, linkDto));
+      boolean isNewLink = (paintingService.getLinkByGalleryIdAndPaintingId(galleryId, paintingId).isEmpty());
+      return ResponseEntity.status(isNewLink ? HttpStatus.CREATED : HttpStatus.OK)
+        .body(paintingService.createOrUpdateLinkPaintingToGallery(galleryId, paintingId, linkDto, isNewLink));
     });
   }
 
@@ -111,6 +112,9 @@ public class PaintingController {
       }
       if (req.getName() == null) {
         this.addViolation("name", "name is not set or empty");
+      }
+      if (req.getYearOfCreation() < 0) {
+        this.addViolation("year_of_creation", "year_of_creation in not correct");
       }
       return this;
     }
