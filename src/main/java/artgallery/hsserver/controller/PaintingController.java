@@ -19,18 +19,14 @@ public class PaintingController {
                                         @RequestParam(value = "size", defaultValue = "10") int size) {
     PaintingValidator validator = new PaintingValidator();
     validator.validateSize(size);
-    return ControllerExecutor.execute(validator, () -> {
-        return ResponseEntity.ok().body(paintingService.getAllPaintings(page, size));
-      });
+    return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getAllPaintings(page, size)));
   }
 
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getPaintingById(@PathVariable("id") long id) {
     PaintingValidator validator = new PaintingValidator();
-    return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(paintingService.getPaintingById(id));
-    });
+    return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getPaintingById(id)));
   }
 
 
@@ -38,9 +34,7 @@ public class PaintingController {
   public ResponseEntity<?> createPainting(@RequestBody PaintingDTO req) {
     PaintingValidator validator = new PaintingValidator();
     validator.validatePainting(req);
-    return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.status(HttpStatus.CREATED).body(paintingService.createPainting(req));
-    });
+    return ControllerExecutor.execute(validator, () -> ResponseEntity.status(HttpStatus.CREATED).body(paintingService.createPainting(req)));
   }
 
   @PutMapping("/{id}")
@@ -62,21 +56,10 @@ public class PaintingController {
     });
   }
 
-  @PostMapping("/{paintingId}/galleries")
-  public ResponseEntity<?> createLink(@PathVariable long paintingId, @RequestBody PaintingDescriptionDTO linkDto) {
-    PaintingValidator validator = new PaintingValidator();
-    return ControllerExecutor.execute(validator, () -> {
-      paintingService.createLinkPaintingToGallery(paintingId, linkDto);
-      return ResponseEntity.status(HttpStatus.CREATED).build();
-    });
-  }
-
   @GetMapping("/{paintingId}/galleries")
   public ResponseEntity<?> getLinksToGalleries(@PathVariable long paintingId) {
     PaintingValidator validator = new PaintingValidator();
-    return ControllerExecutor.execute(validator, () -> {
-      return ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId));
-    });
+    return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId)));
   }
 
   @PutMapping("/{galleryId}/paintings/{paintingId}")
@@ -84,7 +67,7 @@ public class PaintingController {
                                               @RequestBody DescriptionDTO linkDto) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
-      boolean isNewLink = (paintingService.getLinkByGalleryIdAndPaintingId(galleryId, paintingId).isEmpty());
+      boolean isNewLink = (paintingService.existsByGalleryIdAndPaintingId(galleryId, paintingId));
       return ResponseEntity.status(isNewLink ? HttpStatus.CREATED : HttpStatus.OK)
         .body(paintingService.createOrUpdateLinkPaintingToGallery(galleryId, paintingId, linkDto, isNewLink));
     });
