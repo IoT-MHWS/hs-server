@@ -2,7 +2,6 @@ package artgallery.hsserver.service;
 
 import artgallery.hsserver.dto.*;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
-import artgallery.hsserver.exception.LinkAlreadyExistsException;
 import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.model.GalleryEntity;
 import artgallery.hsserver.model.GalleryPaintingEntity;
@@ -104,23 +103,7 @@ public class GalleryService {
     return galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, paintingId);
   }
 
-  public GalleryPaintingDTO createLinkGalleryToPainting(long galleryId, GalleryDescriptionDTO linkDto)
-    throws GalleryDoesNotExistException, PaintingDoesNotExistException, LinkAlreadyExistsException {
-    GalleryEntity gallery = galleryRepository.findById(galleryId)
-      .orElseThrow(() -> new GalleryDoesNotExistException(galleryId));
-    PaintingEntity painting = paintingRepository.findById(linkDto.getPaintingId())
-      .orElseThrow(() -> new PaintingDoesNotExistException(linkDto.getPaintingId()));
-    if (galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, linkDto.getPaintingId())) {
-      throw new LinkAlreadyExistsException(galleryId, linkDto.getPaintingId());
-    }
-    GalleryPaintingEntity link = new GalleryPaintingEntity();
-    link.setGallery(gallery);
-    link.setPainting(painting);
-    link.setDescription(linkDto.getDescription());
-    galleryPaintingRepository.save(link);
-    return mapToGallery2PaintingDto(link);
-  }
-
+  @Transactional
   public GalleryPaintingDTO createOrUpdateLinkGalleryToPainting(long galleryId, long paintingId, DescriptionDTO linkDto, boolean isNewLink)
     throws GalleryDoesNotExistException, PaintingDoesNotExistException {
     GalleryEntity gallery = galleryRepository.findById(galleryId)
@@ -136,8 +119,8 @@ public class GalleryService {
     return mapToGallery2PaintingDto(link);
   }
 
-  public Optional<GalleryPaintingEntity> getLinkByGalleryIdAndPaintingId(long galleryId, long paintingId) {
-    return galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, paintingId);
+  public boolean existsByGalleryIdAndPaintingId(long galleryId, long paintingId) {
+    return galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, paintingId);
   }
 
   @Transactional
