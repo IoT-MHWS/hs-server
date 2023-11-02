@@ -16,7 +16,6 @@ public class TicketController {
   private final TicketService ticketService;
 
   @GetMapping("/")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getAllTickets(@RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "size", defaultValue = "10") int size) {
     TicketValidator validator = new TicketValidator();
@@ -28,7 +27,6 @@ public class TicketController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getTicketById(@PathVariable("id") long id) {
     TicketValidator validator = new TicketValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -38,7 +36,6 @@ public class TicketController {
 
 
   @PostMapping
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> createTicket(@RequestBody TicketDTO req) {
     TicketValidator validator = new TicketValidator();
     validator.validateTicket(req);
@@ -48,7 +45,6 @@ public class TicketController {
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> updateTicket(@PathVariable("id") long id, @RequestBody TicketDTO req)  {
     TicketValidator validator = new TicketValidator();
     validator.validateTicket(req);
@@ -59,7 +55,6 @@ public class TicketController {
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> deleteTicket(@PathVariable("id") long id) {
     TicketValidator validator = new TicketValidator();
 

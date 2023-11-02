@@ -16,7 +16,6 @@ public class OrderController {
   private final OrderService orderService;
 
   @GetMapping("/")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getAllOrders(@RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "size", defaultValue = "10") int size) {
     OrderValidator validator = new OrderValidator();
@@ -28,7 +27,6 @@ public class OrderController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -38,7 +36,6 @@ public class OrderController {
 
 
   @PostMapping
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> createOrder(@RequestBody OrderDTO req) {
     OrderValidator validator = new OrderValidator();
     validator.validateOrder(req);
@@ -49,7 +46,6 @@ public class OrderController {
 
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> updateOrder(@PathVariable("id") long id, @RequestBody OrderDTO req)  {
     OrderValidator validator = new OrderValidator();;
     validator.validateOrder(req);
@@ -61,7 +57,6 @@ public class OrderController {
 
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> deleteOrder(@PathVariable("id") long id) {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {

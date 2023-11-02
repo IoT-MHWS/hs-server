@@ -30,7 +30,6 @@ class AuthController {
   }
 
   @PostMapping("/refresh")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> refreshToken(@RequestHeader HttpHeaders reqHeaders) {
     return ControllerExecutor.execute(null, () -> {
       var tokenDTO = authService.refreshToken(reqHeaders);

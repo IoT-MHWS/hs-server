@@ -46,7 +46,6 @@ public class UserController {
   }
 
   @GetMapping(path = "/{login}/roles")
-  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> listUserRoles(@PathVariable("login") String name) {
     var validator = new UserValidator().validateLogin(name);
 
