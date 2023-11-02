@@ -46,10 +46,10 @@ public class RecService {
   }
 
   private PaintingDTO mapToPaintingDto(PaintingEntity painting) {
-    List<Long> listIds = painting.getGalleryPaintings().stream()
-      .map(GalleryPaintingEntity::getId)
-      .collect(Collectors.toList());
+//    List<Long> listIds = painting.getGalleryPaintings().stream()
+//      .map(GalleryPaintingEntity::getId)
+//      .collect(Collectors.toList());
     return new PaintingDTO( painting.getId(), painting.getName(), painting.getYearOfCreation(),
-      painting.getArtistEntity().getId(), listIds);
+      painting.getArtistEntity().getId());
   }
 }

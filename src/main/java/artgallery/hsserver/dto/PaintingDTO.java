@@ -16,5 +16,4 @@ public class PaintingDTO {
   private String name;
   private Integer yearOfCreation;
   private Long artistId;
-  private List<Long> galleriesId;
 }
