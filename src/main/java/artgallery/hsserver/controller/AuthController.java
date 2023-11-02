@@ -1,14 +1,13 @@
 package artgallery.hsserver.controller;
 
 import artgallery.hsserver.controller.validator.Validator;
-import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(path = "/api/v1/auth", produces = { "application/json", "application/xml" })
@@ -16,17 +15,6 @@ import org.springframework.web.bind.annotation.*;
 class AuthController {
 
   private final AuthService authService;
-
-  @PostMapping(path = "/register")
-  public ResponseEntity<?> register(@RequestBody UserDTO req) {
-    AuthValidator validator = new AuthValidator();
-    validator.validateLogin(req).validatePassword(req);
-
-    return ControllerExecutor.execute(validator, () -> {
-      authService.register(req);
-      return ResponseEntity.status(HttpStatus.CREATED).body("ok");
-    });
-  }
 
   @PostMapping(path = "/login")
   public ResponseEntity<?> login(@RequestBody UserDTO req) {

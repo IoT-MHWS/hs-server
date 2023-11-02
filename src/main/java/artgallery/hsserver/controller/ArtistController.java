@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class ArtistController {
 
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
   public ResponseEntity<?> createArtist(@RequestBody ArtistDTO req) {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
@@ -56,6 +58,7 @@ public class ArtistController {
 
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
   public ResponseEntity<?> updateArtist(@PathVariable("id") long id, @RequestBody ArtistDTO req)  {
     ArtistValidator validator = new ArtistValidator();
     validator.validateArtist(req);
@@ -67,6 +70,7 @@ public class ArtistController {
 
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
   public ResponseEntity<?> deleteArtist(@PathVariable("id") long id) {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {

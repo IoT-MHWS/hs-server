@@ -7,6 +7,7 @@ import artgallery.hsserver.service.GalleryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +34,7 @@ public class GalleryController {
   }
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> createGallery(@RequestBody GalleryDTO req) {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
@@ -40,6 +42,7 @@ public class GalleryController {
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> updateGallery(@PathVariable("id") long id, @RequestBody GalleryDTO req) {
     GalleryValidator validator = new GalleryValidator();
     validator.validateGallery(req);
@@ -47,6 +50,7 @@ public class GalleryController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> deleteGallery(@PathVariable("id") long id) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -56,12 +60,14 @@ public class GalleryController {
   }
 
   @GetMapping("/{galleryId}/paintings")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> getLinksToPaintings(@PathVariable long galleryId) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(galleryService.getLinksGalleryToPainting(galleryId)));
   }
 
   @PutMapping("/{galleryId}/paintings/{paintingId}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
                                               @RequestBody DescriptionDTO linkDto) {
     GalleryValidator validator = new GalleryValidator();
@@ -73,6 +79,7 @@ public class GalleryController {
   }
 
   @DeleteMapping("/{galleryId}/paintings/{paintingId}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') ")
   public ResponseEntity<?> deleteLink(@PathVariable long galleryId, @PathVariable long paintingId) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {

@@ -9,10 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaintingExtraDTO {
-  private long id;
-  private String name;
-  private Integer yearOfCreation;
-  private Long artistId;
-  private String description;
+public class UserCreatedDTO {
+  private String login;
 }

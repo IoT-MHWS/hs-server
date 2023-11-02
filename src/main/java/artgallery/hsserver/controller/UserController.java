@@ -3,6 +3,8 @@ package artgallery.hsserver.controller;
 import artgallery.hsserver.controller.validator.Validator;
 import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.RoleDTO;
+import artgallery.hsserver.dto.UserDTO;
+import artgallery.hsserver.service.AuthService;
 import artgallery.hsserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
+  private final AuthService authService;
 
   @PostMapping(path = "/{login}/roles/add")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
   public ResponseEntity<?> addRole(@PathVariable("login") String name, @RequestBody RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
@@ -32,7 +35,7 @@ public class UserController {
   }
 
   @PostMapping(path = "/{login}/roles/remove")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
   public ResponseEntity<?> removeRole(@PathVariable("login") String name, @RequestBody RoleDTO roleDTO) {
     var validator = new UserValidator().validateLogin(name).validateRole(roleDTO);
 
@@ -51,6 +54,16 @@ public class UserController {
     });
   }
 
+  @PostMapping(path = "/create")
+  @PreAuthorize("hasRole('SUPERVISOR')")
+  public ResponseEntity<?> register(@RequestBody UserDTO req) {
+    var validator = new UserValidator().validatePassword(req);
+
+    return ControllerExecutor.execute(validator, () -> {
+      return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(req));
+    });
+  }
+
   private static class UserValidator extends Validator {
     public UserValidator validateLogin(String login) {
       if (login == null || login.isEmpty()) {
@@ -62,6 +75,12 @@ public class UserController {
     public UserValidator validateRole(RoleDTO req) {
       if (req.getRole() == null) {
         this.addViolation("role", "role is not set or empty");
+      }
+      return this;
+    }
+    public UserValidator validatePassword(UserDTO req) {
+      if (req.getPassword() == null || req.getPassword().isEmpty()) {
+        this.addViolation("password", "user password in not set or empty");
       }
       return this;
     }
