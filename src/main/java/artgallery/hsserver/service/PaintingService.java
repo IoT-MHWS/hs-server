@@ -100,32 +100,6 @@ public class PaintingService {
     return galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, paintingId);
   }
 
-  @Transactional
-  public GalleryPaintingDTO createOrUpdateLinkPaintingToGallery(long galleryId, long paintingId, DescriptionDTO linkDto, boolean isNewLink)
-    throws GalleryDoesNotExistException, PaintingDoesNotExistException {
-    PaintingEntity painting = paintingRepository.findById(paintingId)
-      .orElseThrow(() -> new PaintingDoesNotExistException(paintingId));
-    GalleryEntity gallery = galleryRepository.findById(galleryId)
-      .orElseThrow(() -> new GalleryDoesNotExistException(galleryId));
-    GalleryPaintingEntity link = isNewLink ? new GalleryPaintingEntity() : galleryPaintingRepository.findByGalleryIdAndPaintingId(galleryId, paintingId)
-      .orElse(new GalleryPaintingEntity());
-    link.setGallery(gallery);
-    link.setPainting(painting);
-    link.setDescription(linkDto.getDescription());
-    galleryPaintingRepository.save(link);
-    return mapToGallery2PaintingDto(link);
-  }
-
-  public boolean existsByGalleryIdAndPaintingId(long galleryId, long paintingId) {
-    return galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, paintingId);
-  }
-
-  @Transactional
-  public void deleteLink(long galleryId, long paintingId) {
-    if (galleryPaintingRepository.existsByGalleryIdAndPaintingId(galleryId, paintingId)) {
-      galleryPaintingRepository.deleteGalleryPaintingEntityByGalleryIdAndPaintingId(galleryId, paintingId);
-    }
-  }
 
   private PaintingDTO mapToPaintingDto(PaintingEntity paintingEntity) {
     return new PaintingDTO(paintingEntity.getId(), paintingEntity.getName(),
@@ -149,9 +123,5 @@ public class PaintingService {
     paintingEntity.setYearOfCreation(paintingDTO.getYearOfCreation());
     paintingEntity.setArtistEntity(artist);
     return paintingEntity;
-  }
-
-  private GalleryPaintingDTO mapToGallery2PaintingDto(GalleryPaintingEntity link) {
-    return new GalleryPaintingDTO(link.getId(), link.getGallery().getId(), link.getPainting().getId(), link.getDescription());
   }
 }

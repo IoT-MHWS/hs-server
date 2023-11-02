@@ -15,8 +15,8 @@ public class PaintingController {
   private final PaintingService paintingService;
 
   @GetMapping("/")
-  public ResponseEntity<?> getAllOrders(@RequestParam(value = "page", defaultValue = "0") int page,
-                                        @RequestParam(value = "size", defaultValue = "10") int size) {
+  public ResponseEntity<?> getAllPaintings(@RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "10") int size) {
     PaintingValidator validator = new PaintingValidator();
     validator.validateSize(size);
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getAllPaintings(page, size)));
@@ -60,26 +60,6 @@ public class PaintingController {
   public ResponseEntity<?> getLinksToGalleries(@PathVariable long paintingId) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId)));
-  }
-
-  @PutMapping("/{galleryId}/paintings/{paintingId}")
-  public ResponseEntity<?> createOrUpdateLink(@PathVariable long galleryId, @PathVariable long paintingId,
-                                              @RequestBody DescriptionDTO linkDto) {
-    PaintingValidator validator = new PaintingValidator();
-    return ControllerExecutor.execute(validator, () -> {
-      boolean isNewLink = (paintingService.existsByGalleryIdAndPaintingId(galleryId, paintingId));
-      return ResponseEntity.status(isNewLink ? HttpStatus.CREATED : HttpStatus.OK)
-        .body(paintingService.createOrUpdateLinkPaintingToGallery(galleryId, paintingId, linkDto, isNewLink));
-    });
-  }
-
-  @DeleteMapping("/{galleryId}/paintings/{paintingId}")
-  public ResponseEntity<?> deleteLink(@PathVariable long galleryId, @PathVariable long paintingId) {
-    PaintingValidator validator = new PaintingValidator();
-    return ControllerExecutor.execute(validator, () -> {
-      paintingService.deleteLink(galleryId, paintingId);
-      return ResponseEntity.noContent().build();
-    });
   }
 
   private static class PaintingValidator extends Validator {
