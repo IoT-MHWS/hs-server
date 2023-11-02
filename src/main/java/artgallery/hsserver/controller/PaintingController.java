@@ -6,6 +6,8 @@ import artgallery.hsserver.service.PaintingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,7 @@ public class PaintingController {
 
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getPaintingById(@PathVariable("id") long id) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getPaintingById(id)));
@@ -31,6 +34,7 @@ public class PaintingController {
 
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> createPainting(@RequestBody PaintingDTO req) {
     PaintingValidator validator = new PaintingValidator();
     validator.validatePainting(req);
@@ -38,6 +42,7 @@ public class PaintingController {
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> updatePainting(@PathVariable("id") long id, @RequestBody PaintingDTO req)  {
     PaintingValidator validator = new PaintingValidator();
     validator.validatePainting(req);
@@ -48,6 +53,7 @@ public class PaintingController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR')")
   public ResponseEntity<?> deletePainting(@PathVariable("id") long id) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -57,6 +63,7 @@ public class PaintingController {
   }
 
   @GetMapping("/{paintingId}/galleries")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getLinksToGalleries(@PathVariable long paintingId) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId)));

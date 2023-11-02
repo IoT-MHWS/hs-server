@@ -6,6 +6,7 @@ import artgallery.hsserver.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class OrderController {
   private final OrderService orderService;
 
   @GetMapping("/")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getAllOrders(@RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "size", defaultValue = "10") int size) {
     OrderValidator validator = new OrderValidator();
@@ -26,6 +28,7 @@ public class OrderController {
 
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getOrderById(@PathVariable("id") long id) {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -35,6 +38,7 @@ public class OrderController {
 
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> createOrder(@RequestBody OrderDTO req) {
     OrderValidator validator = new OrderValidator();
     validator.validateOrder(req);
@@ -45,6 +49,7 @@ public class OrderController {
 
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> updateOrder(@PathVariable("id") long id, @RequestBody OrderDTO req)  {
     OrderValidator validator = new OrderValidator();;
     validator.validateOrder(req);
@@ -56,6 +61,7 @@ public class OrderController {
 
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> deleteOrder(@PathVariable("id") long id) {
     OrderValidator validator = new OrderValidator();
     return ControllerExecutor.execute(validator, () -> {

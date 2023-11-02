@@ -6,6 +6,7 @@ import artgallery.hsserver.model.Style;
 import artgallery.hsserver.service.RecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class RecController {
   private final RecService recService;
 
   @PostMapping("/rec-artists")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getFilteredArtists(@RequestBody RecDTO req) {
     RecValidator validator = new RecValidator();
     validator.validateRec(req);
@@ -27,6 +29,7 @@ public class RecController {
   }
 
   @GetMapping("/artists/{artistId}/paintings")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
   public ResponseEntity<?> getPaintingsByArtistId(@PathVariable Long artistId) {
     RecValidator validator = new RecValidator();
     return ControllerExecutor.execute(validator, () -> {
