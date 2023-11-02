@@ -3,13 +3,13 @@ package artgallery.hsserver.controller;
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.MessageDTO;
 import artgallery.hsserver.dto.RoleDTO;
+import artgallery.hsserver.dto.UserCreatedDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.RoleDoesNotExistException;
 import artgallery.hsserver.exception.UserAlreadyExists;
 import artgallery.hsserver.exception.UserDoesNotExistException;
 import artgallery.hsserver.exception.UserRoleAlreadyExists;
 import artgallery.hsserver.model.Role;
-import artgallery.hsserver.service.AuthService;
 import artgallery.hsserver.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,17 +38,41 @@ public class UserControllerTest extends AuthorizedControllerTest {
   static private UserDTO userDTO;
 
   @BeforeAll
-  static void setup(@Autowired UserService userService, @Autowired AuthService authService) throws UserAlreadyExists, RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
+  static void setup(@Autowired UserService userService) throws UserAlreadyExists, RoleDoesNotExistException, UserDoesNotExistException, UserRoleAlreadyExists {
     userService.addRole(username, Role.ADMIN);
 
     userDTO = new UserDTO();
     userDTO.setLogin("username-2");
     userDTO.setPassword("password-2");
-    authService.register(userDTO);
+    userService.register(userDTO);
   }
 
   @Autowired
   UserService userService;
+
+  @Test
+  public void testRegisterUser() throws Exception {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setLogin("username-3");
+    userDTO.setPassword("password-3");
+
+    String request = objectMapper.writeValueAsString(userDTO);
+
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/create")
+        .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+        .content(request)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn();
+    MockHttpServletResponse response = result.getResponse();
+
+    UserCreatedDTO resultDTO = objectMapper.readValue(response.getContentAsString(), UserCreatedDTO.class);
+
+    assertAll(
+      () -> assertEquals(201, response.getStatus()),
+      () -> assertEquals(userDTO.getLogin(), resultDTO.getLogin())
+    );
+  }
 
   @Test
   void testRoleAdding() throws Exception {

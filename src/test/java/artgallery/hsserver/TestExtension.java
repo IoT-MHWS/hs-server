@@ -20,7 +20,7 @@ public class TestExtension implements BeforeAllCallback, CloseableResource, Afte
       new File("docker-compose.yml"))
       .withExposedService("postgres", 5432);
 
-  private static boolean started = false;
+  private static boolean started = true;
 
   @Override
   public void beforeAll(ExtensionContext context) {

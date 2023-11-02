@@ -39,7 +39,6 @@ public class ExhibitionControllerTest extends AuthorizedControllerTest {
     GalleryDTO galleryDTO = new GalleryDTO();
     galleryDTO.setName("gallery");
     galleryDTO.setAddress("here");
-    galleryDTO.setPaintingsId(List.of());
     galleryDTO = galleryService.createGallery(galleryDTO);
 
     exhibitionDTO = new ExhibitionDTO();

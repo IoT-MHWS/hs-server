@@ -20,8 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
@@ -46,7 +44,6 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
     paintingDTO.setName("painting");
     paintingDTO.setYearOfCreation(90);
     paintingDTO.setArtistId(artistDTO.getId());
-    paintingDTO.setGalleriesId(List.of());
   }
 
   @Test
@@ -67,8 +64,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
       () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
-      () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),
-      () -> assertEquals(paintingDTO.getGalleriesId(), resultDTO.getGalleriesId())
+      () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId())
     );
   }
 
@@ -97,8 +93,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
         () -> assertEquals(paintingDTO.getId(), resultDTO.getId()),
         () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
         () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
-        () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),
-        () -> assertEquals(paintingDTO.getGalleriesId(), resultDTO.getGalleriesId())
+        () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId())
       );
     }
 
@@ -136,8 +131,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       );
       assertAll(
         () -> assertEquals(paintingDTO.getName(), results[0].getName()),
-        () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation()),
-        () -> assertEquals(paintingDTO.getGalleriesId(), results[0].getGalleriesId())
+        () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation())
       );
     }
 
