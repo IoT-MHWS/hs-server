@@ -2,6 +2,7 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ArtistDTO;
+import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
@@ -94,6 +95,22 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
         () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
         () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
         () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId())
+      );
+    }
+
+    @Test
+    void testPaintingGalleriesRetrieving() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/paintings/{id}/galleries", paintingDTO.getId())
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      GalleryDTO[] resultDTO = objectMapper.readValue(response.getContentAsString(), GalleryDTO[].class);
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals(0, resultDTO.length)
       );
     }
 

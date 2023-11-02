@@ -2,6 +2,7 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.GalleryDTO;
+import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.service.GalleryService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
@@ -80,6 +81,22 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
         () -> assertEquals(galleryDTO.getId(), resultDTO.getId()),
         () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
         () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress())
+      );
+    }
+
+    @Test
+    void testGalleryPaintingsListing() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/galleries/{id}/paintings", galleryDTO.getId())
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      PaintingDTO[] resultDTO = objectMapper.readValue(response.getContentAsString(), PaintingDTO[].class);
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals(0, resultDTO.length)
       );
     }
 
