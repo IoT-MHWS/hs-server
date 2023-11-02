@@ -1,11 +1,9 @@
 package artgallery.hsserver.service;
 
-import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.dto.RoleDTO;
 import artgallery.hsserver.dto.UserCreatedDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.exception.*;
-import artgallery.hsserver.model.PaintingEntity;
 import artgallery.hsserver.model.Role;
 import artgallery.hsserver.model.RoleEntity;
 import artgallery.hsserver.model.UserEntity;
@@ -13,7 +11,6 @@ import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

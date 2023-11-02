@@ -5,7 +5,6 @@ import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.dto.RecDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.model.ArtistEntity;
-import artgallery.hsserver.model.GalleryPaintingEntity;
 import artgallery.hsserver.model.PaintingEntity;
 import artgallery.hsserver.repository.ArtistRepository;
 import artgallery.hsserver.repository.PaintingRepository;

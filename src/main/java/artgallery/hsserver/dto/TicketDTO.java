@@ -14,5 +14,4 @@ public class TicketDTO {
   private String description;
   private Integer price;
   private Long exhibitionId;
-//  private Long orderId;
 }
