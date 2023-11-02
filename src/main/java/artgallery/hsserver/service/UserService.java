@@ -1,10 +1,11 @@
 package artgallery.hsserver.service;
 
+import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.dto.RoleDTO;
-import artgallery.hsserver.exception.RoleDoesNotExistException;
-import artgallery.hsserver.exception.UserDoesNotExistException;
-import artgallery.hsserver.exception.UserRoleAlreadyExists;
-import artgallery.hsserver.exception.UserRoleDoesNotExist;
+import artgallery.hsserver.dto.UserCreatedDTO;
+import artgallery.hsserver.dto.UserDTO;
+import artgallery.hsserver.exception.*;
+import artgallery.hsserver.model.PaintingEntity;
 import artgallery.hsserver.model.Role;
 import artgallery.hsserver.model.RoleEntity;
 import artgallery.hsserver.model.UserEntity;
@@ -12,8 +13,11 @@ import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,5 +72,32 @@ public class UserService {
     return userEntity.getRoles().stream()
       .map(role -> new RoleDTO(Role.valueOf(role.getName())))
       .collect(Collectors.toList());
+  }
+
+  private final PasswordEncoder passwordEncoder;
+
+  @Transactional
+  public UserCreatedDTO register(UserDTO req) throws RoleDoesNotExistException, UserAlreadyExists {
+    if (userRepository.existsByLogin(req.getLogin())) {
+      throw new UserAlreadyExists(req.getLogin());
+    }
+
+    var userEntity = UserEntity.builder()
+      .login(req.getLogin())
+      .password(passwordEncoder.encode(req.getPassword()))
+      .roles(new ArrayList<>())
+      .build();
+
+    var roleEntity = roleRepository.findByName(Role.PUBLIC.name())
+      .orElseThrow(() -> new RoleDoesNotExistException(Role.PUBLIC));
+
+    userEntity.getRoles().add(roleEntity);
+
+    userRepository.save(userEntity);
+    return mapToUserCreatedDto(userEntity);
+  }
+
+  private UserCreatedDTO mapToUserCreatedDto(UserEntity user) {
+    return new UserCreatedDTO(user.getLogin());
   }
 }

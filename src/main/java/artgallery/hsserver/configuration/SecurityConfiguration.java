@@ -40,7 +40,7 @@ public class SecurityConfiguration {
       .authenticationProvider(authenticationProvider)
       .authorizeHttpRequests((req) -> req
         .requestMatchers(WHITE_LIST_URLS).permitAll()
-        .requestMatchers("/api/v1/auth/**").permitAll()
+        .requestMatchers("/api/v1/auth/login").permitAll()
         .anyRequest().authenticated())
       .formLogin(form -> form
         .disable())
