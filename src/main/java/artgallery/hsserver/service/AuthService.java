@@ -4,22 +4,15 @@ import artgallery.hsserver.configuration.CustomUserDetails;
 import artgallery.hsserver.configuration.JwtService;
 import artgallery.hsserver.dto.TokenDTO;
 import artgallery.hsserver.dto.UserDTO;
-import artgallery.hsserver.exception.RoleDoesNotExistException;
-import artgallery.hsserver.exception.UserAlreadyExists;
 import artgallery.hsserver.exception.UserDoesNotExistException;
-import artgallery.hsserver.model.Role;
 import artgallery.hsserver.model.UserEntity;
-import artgallery.hsserver.repository.RoleRepository;
 import artgallery.hsserver.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
 /**
  * AuthService
@@ -32,30 +25,9 @@ public class AuthService {
   public static final String JWT_PREFIX = "Bearer ";
 
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
-  private final PasswordEncoder passwordEncoder;
 
-  @Transactional
-  public void register(UserDTO req) throws RoleDoesNotExistException, UserAlreadyExists {
-    if (userRepository.existsByLogin(req.getLogin())) {
-      throw new UserAlreadyExists(req.getLogin());
-    }
-
-    var userEntity = UserEntity.builder()
-      .login(req.getLogin())
-      .password(passwordEncoder.encode(req.getPassword()))
-      .roles(new ArrayList<>())
-      .build();
-
-    var roleEntity = roleRepository.findByName(Role.PUBLIC.name())
-      .orElseThrow(() -> new RoleDoesNotExistException(Role.PUBLIC));
-
-    userEntity.getRoles().add(roleEntity);
-
-    userRepository.save(userEntity);
-  }
 
   public TokenDTO login(UserDTO req) throws UserDoesNotExistException {
     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
