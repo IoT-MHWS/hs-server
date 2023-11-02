@@ -23,7 +23,7 @@ public class ArtistController {
   private final ArtistService artistService;
 
   @GetMapping("/")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getAllArtists(@RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "size", defaultValue = "10") int size) {
     ArtistValidator validator = new ArtistValidator();
@@ -39,7 +39,7 @@ public class ArtistController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getArtistById(@PathVariable("id") long id) {
     ArtistValidator validator = new ArtistValidator();
     return ControllerExecutor.execute(validator, () -> {

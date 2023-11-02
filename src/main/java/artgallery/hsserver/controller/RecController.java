@@ -19,7 +19,7 @@ public class RecController {
   private final RecService recService;
 
   @PostMapping("/rec-artists")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getFilteredArtists(@RequestBody RecDTO req) {
     RecValidator validator = new RecValidator();
     validator.validateRec(req);
@@ -29,7 +29,7 @@ public class RecController {
   }
 
   @GetMapping("/artists/{artistId}/paintings")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getPaintingsByArtistId(@PathVariable Long artistId) {
     RecValidator validator = new RecValidator();
     return ControllerExecutor.execute(validator, () -> {

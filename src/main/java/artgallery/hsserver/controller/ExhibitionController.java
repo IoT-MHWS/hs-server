@@ -16,7 +16,7 @@ public class ExhibitionController {
   private final ExhibitionService exhibitionService;
 
   @GetMapping("/")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getAllExhibitions(@RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "size", defaultValue = "10") int size) {
     ExhibitionValidator validator = new ExhibitionValidator();
@@ -28,7 +28,7 @@ public class ExhibitionController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getExhibitionById(@PathVariable("id") long id) {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {
@@ -38,7 +38,7 @@ public class ExhibitionController {
 
 
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> createExhibition(@RequestBody ExhibitionDTO req) {
     ExhibitionValidator validator = new ExhibitionValidator();
     validator.validateExhibition(req);
@@ -49,7 +49,7 @@ public class ExhibitionController {
 
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> updateExhibition(@PathVariable("id") long id, @RequestBody ExhibitionDTO req)  {
     ExhibitionValidator validator = new ExhibitionValidator();
     validator.validateExhibition(req);
@@ -61,7 +61,7 @@ public class ExhibitionController {
 
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> deleteExhibition(@PathVariable("id") long id) {
     ExhibitionValidator validator = new ExhibitionValidator();
     return ControllerExecutor.execute(validator, () -> {

@@ -46,7 +46,7 @@ public class UserController {
   }
 
   @GetMapping(path = "/{login}/roles")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> listUserRoles(@PathVariable("login") String name) {
     var validator = new UserValidator().validateLogin(name);
 
@@ -61,7 +61,6 @@ public class UserController {
     var validator = new UserValidator().validatePassword(req);
 
     return ControllerExecutor.execute(validator, () -> {
-//      userService.register(req);
       return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(req));
     });
   }

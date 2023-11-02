@@ -25,7 +25,7 @@ public class GalleryController {
   }
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getGalleryById(@PathVariable("id") long id) {
     GalleryValidator validator = new GalleryValidator();
     return ControllerExecutor.execute(validator, () -> {

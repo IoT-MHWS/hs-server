@@ -26,7 +26,7 @@ public class PaintingController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getPaintingById(@PathVariable("id") long id) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getPaintingById(id)));
@@ -63,7 +63,7 @@ public class PaintingController {
   }
 
   @GetMapping("/{paintingId}/galleries")
-  @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR') or hasRole('MODERATOR') or hasRole('PUBLIC')")
+  @PreAuthorize("hasRole('PUBLIC')")
   public ResponseEntity<?> getLinksToGalleries(@PathVariable long paintingId) {
     PaintingValidator validator = new PaintingValidator();
     return ControllerExecutor.execute(validator, () -> ResponseEntity.ok().body(paintingService.getLinksPaintingToGallery(paintingId)));
