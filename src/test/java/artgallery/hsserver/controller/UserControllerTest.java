@@ -75,6 +75,19 @@ public class UserControllerTest extends AuthorizedControllerTest {
   }
 
   @Test
+  public void testRegisterUserConflict() throws Exception {
+    String request = objectMapper.writeValueAsString(userDTO);
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/create")
+        .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+        .content(request)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn();
+    MockHttpServletResponse response = result.getResponse();
+    assertEquals(409, response.getStatus());
+  }
+
+  @Test
   void testRoleAdding() throws Exception {
     RoleDTO roleDTO = new RoleDTO();
     roleDTO.setRole(Role.MODERATOR);

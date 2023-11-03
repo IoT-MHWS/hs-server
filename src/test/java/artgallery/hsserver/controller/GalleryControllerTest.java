@@ -56,6 +56,18 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     );
   }
 
+  @Test
+  void testGalleryCreationBadData() throws Exception {
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/galleries")
+        .content("{}")
+        .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn();
+    MockHttpServletResponse response = result.getResponse();
+    assertEquals(422, response.getStatus());
+  }
+
   @Nested
   class CreatedGalleryTest {
     @Autowired
@@ -82,6 +94,16 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
         () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
         () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress())
       );
+    }
+
+    @Test
+    void testGalleryNotFound() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/galleries/2000")
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+      assertEquals(404, response.getStatus());
     }
 
     @Test
