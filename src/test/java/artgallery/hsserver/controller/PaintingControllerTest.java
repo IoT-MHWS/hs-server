@@ -2,6 +2,7 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ArtistDTO;
+import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.exception.ArtistDoesNotExistException;
 import artgallery.hsserver.exception.GalleryDoesNotExistException;
@@ -19,8 +20,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,7 +45,6 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
     paintingDTO.setName("painting");
     paintingDTO.setYearOfCreation(90);
     paintingDTO.setArtistId(artistDTO.getId());
-    paintingDTO.setGalleriesId(List.of());
   }
 
   @Test
@@ -67,8 +65,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
       () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
-      () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),
-      () -> assertEquals(paintingDTO.getGalleriesId(), resultDTO.getGalleriesId())
+      () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId())
     );
   }
 
@@ -97,8 +94,23 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
         () -> assertEquals(paintingDTO.getId(), resultDTO.getId()),
         () -> assertEquals(paintingDTO.getName(), resultDTO.getName()),
         () -> assertEquals(paintingDTO.getYearOfCreation(), resultDTO.getYearOfCreation()),
-        () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId()),
-        () -> assertEquals(paintingDTO.getGalleriesId(), resultDTO.getGalleriesId())
+        () -> assertEquals(paintingDTO.getArtistId(), resultDTO.getArtistId())
+      );
+    }
+
+    @Test
+    void testPaintingGalleriesRetrieving() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/paintings/{id}/galleries", paintingDTO.getId())
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      GalleryDTO[] resultDTO = objectMapper.readValue(response.getContentAsString(), GalleryDTO[].class);
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals(0, resultDTO.length)
       );
     }
 
@@ -136,8 +148,7 @@ public class PaintingControllerTest extends AuthorizedControllerTest {
       );
       assertAll(
         () -> assertEquals(paintingDTO.getName(), results[0].getName()),
-        () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation()),
-        () -> assertEquals(paintingDTO.getGalleriesId(), results[0].getGalleriesId())
+        () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation())
       );
     }
 

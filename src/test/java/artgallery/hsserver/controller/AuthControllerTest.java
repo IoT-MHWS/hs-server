@@ -5,6 +5,7 @@ import artgallery.hsserver.dto.TokenDTO;
 import artgallery.hsserver.dto.UserDTO;
 import artgallery.hsserver.repository.UserRepository;
 import artgallery.hsserver.service.AuthService;
+import artgallery.hsserver.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -34,6 +35,9 @@ public class AuthControllerTest {
   @Autowired
   AuthService authService;
 
+  @Autowired
+  UserService userService;
+
   static private final ObjectMapper objectMapper = new ObjectMapper();
 
   static private UserDTO userDTO;
@@ -46,25 +50,8 @@ public class AuthControllerTest {
   }
 
   @Test
-  public void testRegisterUser() throws Exception {
-    String request = objectMapper.writeValueAsString(userDTO);
-
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/register")
-        .content(request)
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON))
-      .andReturn();
-    MockHttpServletResponse response = result.getResponse();
-
-    assertAll(
-      () -> assertEquals(201, response.getStatus()),
-      () -> assertEquals("ok", response.getContentAsString())
-    );
-  }
-
-  @Test
   public void testLoginUser() throws Exception {
-    authService.register(userDTO);
+    userService.register(userDTO);
 
     String request = objectMapper.writeValueAsString(userDTO);
 
@@ -86,7 +73,7 @@ public class AuthControllerTest {
 
   @Test
   public void testTokenRefresh() throws Exception {
-    authService.register(userDTO);
+    userService.register(userDTO);
     TokenDTO tokenDTO = authService.login(userDTO);
 
     String request = objectMapper.writeValueAsString(userDTO);

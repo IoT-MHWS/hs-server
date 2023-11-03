@@ -2,8 +2,7 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.GalleryDTO;
-import artgallery.hsserver.exception.GalleryDoesNotExistException;
-import artgallery.hsserver.exception.PaintingDoesNotExistException;
+import artgallery.hsserver.dto.PaintingDTO;
 import artgallery.hsserver.service.GalleryService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
@@ -16,8 +15,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +33,6 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     galleryDTO = new GalleryDTO();
     galleryDTO.setName("gallery");
     galleryDTO.setAddress("here");
-    galleryDTO.setPaintingsId(List.of());
   }
 
   @Test
@@ -56,9 +52,20 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     assertAll(
       () -> assertEquals(201, response.getStatus()),
       () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
-      () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress()),
-      () -> assertEquals(galleryDTO.getPaintingsId(), resultDTO.getPaintingsId())
+      () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress())
     );
+  }
+
+  @Test
+  void testGalleryCreationBadData() throws Exception {
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/galleries")
+        .content("{}")
+        .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn();
+    MockHttpServletResponse response = result.getResponse();
+    assertEquals(422, response.getStatus());
   }
 
   @Nested
@@ -67,7 +74,7 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     GalleryService galleryService;
 
     @BeforeEach
-    public void createGallery() throws PaintingDoesNotExistException {
+    public void createGallery() {
       galleryDTO = galleryService.createGallery(galleryDTO);
     }
 
@@ -90,6 +97,32 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
     }
 
     @Test
+    void testGalleryNotFound() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/galleries/2000")
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+      assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    void testGalleryPaintingsListing() throws Exception {
+      MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/galleries/{id}/paintings", galleryDTO.getId())
+          .header("Authorization", String.format("Bearer %s", tokenDTO.getJwtToken()))
+          .accept(MediaType.APPLICATION_JSON))
+        .andReturn();
+      MockHttpServletResponse response = result.getResponse();
+
+      PaintingDTO[] resultDTO = objectMapper.readValue(response.getContentAsString(), PaintingDTO[].class);
+
+      assertAll(
+        () -> assertEquals(200, response.getStatus()),
+        () -> assertEquals(0, resultDTO.length)
+      );
+    }
+
+    @Test
     void testGalleryUpdating() throws Exception {
       String request = objectMapper.writeValueAsString(galleryDTO);
 
@@ -101,9 +134,13 @@ public class GalleryControllerTest extends AuthorizedControllerTest {
         .andReturn();
       MockHttpServletResponse response = result.getResponse();
 
+      GalleryDTO resultDTO = objectMapper.readValue(response.getContentAsString(), GalleryDTO.class);
+
       assertAll(
         () -> assertEquals(200, response.getStatus()),
-        () -> assertEquals("ok", response.getContentAsString())
+        () -> assertEquals(galleryDTO.getId(), resultDTO.getId()),
+        () -> assertEquals(galleryDTO.getName(), resultDTO.getName()),
+        () -> assertEquals(galleryDTO.getAddress(), resultDTO.getAddress())
       );
     }
 

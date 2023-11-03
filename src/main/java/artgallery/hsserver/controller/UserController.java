@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
-  private final AuthService authService;
 
   @PostMapping(path = "/{login}/roles/add")
   @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERVISOR')")

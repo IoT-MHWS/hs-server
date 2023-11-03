@@ -2,8 +2,10 @@ package artgallery.hsserver.controller;
 
 import artgallery.hsserver.dto.TokenDTO;
 import artgallery.hsserver.dto.UserDTO;
+import artgallery.hsserver.model.Role;
 import artgallery.hsserver.repository.UserRepository;
 import artgallery.hsserver.service.AuthService;
+import artgallery.hsserver.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
@@ -24,13 +26,14 @@ public abstract class AuthorizedControllerTest {
   protected static TokenDTO tokenDTO;
 
   @BeforeAll
-  static public void authorizeUser(@Autowired UserRepository userRepository, @Autowired AuthService authService) throws Exception {
+  static public void authorizeUser(@Autowired UserRepository userRepository, @Autowired UserService userService, @Autowired AuthService authService) throws Exception {
     userRepository.deleteAll();
 
     UserDTO userDTO = new UserDTO();
     userDTO.setLogin(username);
     userDTO.setPassword(password);
-    authService.register(userDTO);
+    userService.register(userDTO);
+    userService.addRole(username, Role.SUPERVISOR);
 
     tokenDTO = authService.login(userDTO);
   }

@@ -23,8 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,7 +50,6 @@ public class RecControllerTest extends AuthorizedControllerTest {
     paintingDTO.setName("painting");
     paintingDTO.setYearOfCreation(90);
     paintingDTO.setArtistId(artistDTO.getId());
-    paintingDTO.setGalleriesId(List.of());
     paintingDTO = paintingService.createPainting(paintingDTO);
   }
 
@@ -74,8 +71,7 @@ public class RecControllerTest extends AuthorizedControllerTest {
       () -> assertEquals(paintingDTO.getId(), results[0].getId()),
       () -> assertEquals(paintingDTO.getName(), results[0].getName()),
       () -> assertEquals(paintingDTO.getYearOfCreation(), results[0].getYearOfCreation()),
-      () -> assertEquals(paintingDTO.getArtistId(), results[0].getArtistId()),
-      () -> assertEquals(paintingDTO.getGalleriesId(), results[0].getGalleriesId())
+      () -> assertEquals(paintingDTO.getArtistId(), results[0].getArtistId())
     );
   }
 

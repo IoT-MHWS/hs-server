@@ -1,30 +1,21 @@
 package artgallery.hsserver.service;
 
-import artgallery.hsserver.exception.UserAlreadyExists;
+import artgallery.hsserver.TestExtension;
+import artgallery.hsserver.dto.UserDTO;
+import artgallery.hsserver.model.Role;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import artgallery.hsserver.TestExtension;
-import artgallery.hsserver.dto.UserDTO;
-import artgallery.hsserver.exception.RoleDoesNotExistException;
-import artgallery.hsserver.exception.UserDoesNotExistException;
-import artgallery.hsserver.exception.UserRoleAlreadyExists;
-import artgallery.hsserver.model.Role;
-import jakarta.transaction.Transactional;
-
 /**
  * UserServiceTest
  */
 @SpringBootTest
-@ExtendWith({ TestExtension.class })
+@ExtendWith({TestExtension.class})
 @Transactional
 public class UserServiceTest {
-
-  @Autowired
-  private AuthService authService;
-
   @Autowired
   private UserService userService;
 
@@ -36,7 +27,7 @@ public class UserServiceTest {
 
     userDTO.setLogin(uniqueLogin);
     userDTO.setPassword(password);
-    authService.register(userDTO);
+    userService.register(userDTO);
 
     userService.addRole(uniqueLogin, Role.MODERATOR);
   }

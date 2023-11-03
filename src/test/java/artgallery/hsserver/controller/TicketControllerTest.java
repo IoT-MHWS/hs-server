@@ -4,7 +4,10 @@ import artgallery.hsserver.TestExtension;
 import artgallery.hsserver.dto.ExhibitionDTO;
 import artgallery.hsserver.dto.GalleryDTO;
 import artgallery.hsserver.dto.TicketDTO;
-import artgallery.hsserver.exception.*;
+import artgallery.hsserver.exception.ExhibitionDoesNotExistException;
+import artgallery.hsserver.exception.GalleryDoesNotExistException;
+import artgallery.hsserver.exception.OrderDoesNotExistException;
+import artgallery.hsserver.exception.PaintingDoesNotExistException;
 import artgallery.hsserver.service.ExhibitionService;
 import artgallery.hsserver.service.GalleryService;
 import artgallery.hsserver.service.TicketService;
@@ -21,7 +24,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +44,6 @@ public class TicketControllerTest extends AuthorizedControllerTest {
     galleryDTO = new GalleryDTO();
     galleryDTO.setName("gallery");
     galleryDTO.setAddress("here");
-    galleryDTO.setPaintingsId(List.of());
     galleryDTO = galleryService.createGallery(galleryDTO);
 
     exhibitionDTO = new ExhibitionDTO();
