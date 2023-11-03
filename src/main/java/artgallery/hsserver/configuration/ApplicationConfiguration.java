@@ -27,7 +27,7 @@ public class ApplicationConfiguration {
   public UserDetailsService userDetailsService() {
     return username -> {
       UserEntity userEntity = userRepository.findByLogin(username)
-        .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+          .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
       return new CustomUserDetails(userEntity);
     };
