@@ -5,6 +5,7 @@
 Set environment variables. As an example:
 
 ```bash
+export HS_SERVER_DATASOURCE_HOST=localhost
 export HS_SERVER_DATASOURCE_DATABASE=bluster
 export HS_SERVER_DATASOURCE_PORT=5432
 export HS_SERVER_DATASOURCE_USERNAME=postgres
@@ -35,3 +36,20 @@ java -jar build/libs/hs-server-0.0.1-SNAPSHOT.jar
 ./gradleW bootRun
 ```
 
+Or via docker-compose:
+```
+docker compose --profile app-jar up -d  # requires a complete jar
+docker compose --profile app-gradle up -d  # slower, but doesn't require jdk on the host machine
+```
+
+Check it: [`http://localhost:8097/swagger-ui/index.html`](http://localhost:8097/swagger-ui/index.html)
+
+Watch logs:
+```
+docker compose logs --follow app-jar app-gradle
+```
+
+Stop everything
+```
+docker compose down
+```
